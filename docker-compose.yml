@@ -1,0 +1,67 @@
+services:
+  database:
+    image: postgres:15
+    container_name: curlme-database
+    restart: always
+    environment:
+      - POSTGRES_DB=curlme
+      - POSTGRES_USER=curlme
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5432:5432'
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    networks:
+      - database-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: curlme-api
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    ports:
+      - '8000:8000'
+    depends_on:
+      - database
+    networks:
+      # - curlme-network
+      - database-network
+
+  # redis:
+  #   image: redis:latest
+  #   container_name: curlme-redis
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - database-network
+
+  # caddy:
+  #   image: caddy:latest
+  #   container_name: curlme-caddy
+  #   restart: always
+  #   ports:
+  #     - '80:80'
+  #     - '443:443'
+  #   volumes:
+  #     - ./Caddyfile:/etc/caddy/Caddyfile
+  #     - caddy-data:/data
+  #     - caddy-config:/config
+  #   networks:
+  #     - curlme-network
+  #   extra_hosts:
+  #     - 'host.docker.internal:host-gateway'
+
+volumes:
+  database-data:
+  # caddy-data:
+  # caddy-config:
+
+networks:
+  # curlme-network:
+  database-network:

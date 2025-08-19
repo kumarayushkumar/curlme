@@ -1,0 +1,7 @@
+localhost {
+  reverse_proxy curlme-api:8000
+}
+
+:80 {
+  reverse_proxy curlme-api:8000
+}
