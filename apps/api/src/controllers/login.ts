@@ -2,17 +2,14 @@ import axios from 'axios'
 import type { Request, Response } from 'express'
 
 import type { GitHubDeviceTokenResponse, GitHubUser } from '../types/github.js'
-import {
-  GITHUB_CLIENT_ID,
-  HTTP_STATUS_CODE
-} from '../utils/constants.js'
+import { GITHUB_CLIENT_ID, HTTP_STATUS_CODE } from '../utils/constants.js'
 import { prisma } from '../utils/database.js'
 import { toPlainText } from '../utils/helper.js'
 import { generateToken } from '../utils/jwt.js'
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { device_code } = req.body 
+    const { device_code } = req.body
 
     if (!device_code) {
       const deviceFlowResponse = await axios.post(
@@ -28,7 +25,6 @@ export const login = async (req: Request, res: Response) => {
           }
         }
       )
-
 
       return res.status(HTTP_STATUS_CODE.OK).send(
         toPlainText({

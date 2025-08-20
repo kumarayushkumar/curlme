@@ -38,11 +38,13 @@ const serverConfig = () => {
   app.use(express.json())
 
   app.get('/health', (_, res: express.Response) => {
-    return res.status(HTTP_STATUS_CODE.OK).send(toPlainText({
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      version: VERSION
-    }))
+    return res.status(HTTP_STATUS_CODE.OK).send(
+      toPlainText({
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        version: VERSION
+      })
+    )
   })
 
   ROUTER.forEach(route => {
