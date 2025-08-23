@@ -12,9 +12,9 @@ export const authMiddleware = (
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        success: false,
         error: 'Authentication required',
-        message: 'Please provide a valid JWT token in Authorization header',
-        example: 'Authorization: Bearer <your-token>'
+        message: 'Please provide a valid JWT token in Authorization header'
       })
     }
 
@@ -22,9 +22,9 @@ export const authMiddleware = (
 
     if (!token) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        success: false,
         error: 'Authentication required',
-        message: 'Please provide a valid JWT token in Authorization header',
-        example: 'Authorization: Bearer <your-token>'
+        message: 'Please provide a valid JWT token in Authorization header'
       })
     }
 
@@ -35,21 +35,22 @@ export const authMiddleware = (
   } catch (error) {
     if (isTokenExpired(error)) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        success: false,
         error: 'Token expired',
-        message: 'Your session has expired. Please login again.',
-        action:
-          'curl -X POST http://localhost:8000/login -H "Content-Type: application/json"'
+        message: 'Your session has expired. Please login again.'
       })
     }
 
     if (isTokenInvalid(error)) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
+        success: false,
         error: 'Invalid token',
         message: 'The provided JWT token is invalid'
       })
     }
 
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+      success: false,
       error: 'Authentication error',
       message: 'An error occurred during authentication'
     })

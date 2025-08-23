@@ -4,10 +4,9 @@ import type { Request, Response } from 'express'
 import type { GitHubDeviceTokenResponse, GitHubUser } from '../types/github.js'
 import { GITHUB_CLIENT_ID, HTTP_STATUS_CODE } from '../utils/constants.js'
 import { prisma } from '../utils/database.js'
-import { toPlainText } from '../utils/helper.js'
 import { generateToken } from '../utils/jwt.js'
 
-export const login = async (req: Request, res: Response) => {
+export const loginHandler = async (req: Request, res: Response) => {
   try {
     const { device_code } = req.body
 
@@ -26,9 +25,10 @@ export const login = async (req: Request, res: Response) => {
         }
       )
 
-      return res.status(HTTP_STATUS_CODE.OK).send(
-        toPlainText({
-          message: 'GitHub authentication required',
+      return res.status(HTTP_STATUS_CODE.OK).json({
+        success: true,
+        message: 'GitHub authentication required',
+        data: {
           device_code: deviceFlowResponse.data.device_code,
           user_code: deviceFlowResponse.data.user_code,
           verification_uri: deviceFlowResponse.data.verification_uri,
@@ -36,8 +36,8 @@ export const login = async (req: Request, res: Response) => {
           interval: deviceFlowResponse.data.interval,
           instructions: `1. Visit ${deviceFlowResponse.data.verification_uri} and enter code: ${deviceFlowResponse.data.user_code}
 2. After authorization, run: curl -X POST http://localhost:8000/login -H "Content-Type: application/json" -d '{"device_code":"${deviceFlowResponse.data.device_code}"}'`
-        })
-      )
+        }
+      })
     }
 
     // Exchange device code for access token
@@ -59,12 +59,11 @@ export const login = async (req: Request, res: Response) => {
     const tokenData = tokenResponse.data as GitHubDeviceTokenResponse
 
     if (!tokenData.access_token) {
-      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).send(
-        toPlainText({
-          error: 'Authorization pending or denied',
-          message: 'Please complete GitHub authorization or try again'
-        })
-      )
+      return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
+        success: false,
+        error: 'Authorization pending or denied',
+        message: 'Please complete GitHub authorization or try again'
+      })
     }
 
     const userResponse = await axios.get('https://api.github.com/user', {
@@ -94,9 +93,10 @@ export const login = async (req: Request, res: Response) => {
       username: user.username
     })
 
-    return res.status(HTTP_STATUS_CODE.OK).send(
-      toPlainText({
-        message: 'Login successful',
+    return res.status(HTTP_STATUS_CODE.OK).json({
+      success: true,
+      message: 'Login successful',
+      data: {
         token: jwtToken,
         user: {
           id: user.id,
@@ -104,39 +104,36 @@ export const login = async (req: Request, res: Response) => {
           name: user.name
         },
         instructions: 'Use this token in Authorization header: Bearer <token>'
-      })
-    )
+      }
+    })
   } catch (error: any) {
     if (
       error.response?.status === HTTP_STATUS_CODE.BAD_REQUEST &&
       error.response?.data?.error === 'authorization_pending'
     ) {
-      return res.status(HTTP_STATUS_CODE.ACCEPTED).send(
-        toPlainText({
-          error: 'authorization_pending',
-          message: 'Please complete GitHub authorization in your browser'
-        })
-      )
+      return res.status(HTTP_STATUS_CODE.ACCEPTED).json({
+        success: false,
+        error: 'authorization_pending',
+        message: 'Please complete GitHub authorization in your browser'
+      })
     }
 
     if (
       error.response?.status === HTTP_STATUS_CODE.BAD_REQUEST &&
       error.response?.data?.error === 'slow_down'
     ) {
-      return res.status(HTTP_STATUS_CODE.TOO_MANY_REQUESTS).send(
-        toPlainText({
-          error: 'slow_down',
-          message: 'Too many requests, please wait before trying again'
-        })
-      )
+      return res.status(HTTP_STATUS_CODE.TOO_MANY_REQUESTS).json({
+        success: false,
+        error: 'slow_down',
+        message: 'Too many requests, please wait before trying again'
+      })
     }
 
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).send(
-      toPlainText({
-        error: 'Login failed',
-        message: 'An error occurred during authentication'
-      })
-    )
+    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      error: 'Login failed',
+      message: 'An error occurred during authentication'
+    })
   } finally {
     await prisma.$disconnect()
   }

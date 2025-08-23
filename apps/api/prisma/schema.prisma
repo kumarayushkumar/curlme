@@ -20,6 +20,9 @@ model User {
   createdAt   DateTime @default(now())
   Post        Post[]
   Reply       Reply[]
+  Likes       Like[]
+
+  @@index([username])
 }
 
 model Post {
@@ -30,6 +33,7 @@ model Post {
   replies    Reply[]
   likesCount Int      @default(0)
   user       User     @relation(fields: [userId], references: [id])
+  likes      Like[]
 }
 
 model Reply {
@@ -41,4 +45,26 @@ model Reply {
   likesCount Int      @default(0)
   post       Post     @relation(fields: [postId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
+  likes     Like[]
+}
+
+
+
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId  String? @map("post_id")
+  post    Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  replyId String? @map("reply_id")
+  reply   Reply?  @relation(fields: [replyId], references: [id], onDelete: Cascade)
+
+  // Constraints
+  @@unique([userId, postId], name: "unique_user_post_like")
+  @@unique([userId, replyId], name: "unique_user_reply_like")
 }

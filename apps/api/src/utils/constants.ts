@@ -8,6 +8,16 @@ if (!GITHUB_CLIENT_ID) {
   throw new Error('GITHUB_CLIENT_ID is not defined')
 }
 
+export const REDIS_HOST = process.env.REDIS_HOST as string
+if (!REDIS_HOST) {
+  throw new Error('REDIS_HOST is not defined')
+}
+
+export const REDIS_PORT = process.env.REDIS_PORT as string
+if (!REDIS_PORT) {
+  throw new Error('REDIS_PORT is not defined')
+}
+
 export const HTTP_STATUS_CODE = {
   OK: 200,
   CREATED: 201,
@@ -30,4 +40,6 @@ export const HTTP_STATUS_CODE = {
 
 export const VERSION = '1.0.0'
 
-export const JWT_EXPIRE = '14d'
+export const JWT_EXPIRE = '30d'
+
+export const POST_LIMIT = 50 // Maximum number of posts to cache

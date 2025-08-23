@@ -5,9 +5,5 @@ declare global {
     interface Request {
       user?: JwtPayload
     }
-
-    interface Response {
-      user?: JwtPayload
-    }
   }
 }
