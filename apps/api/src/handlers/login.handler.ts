@@ -27,7 +27,7 @@ export const loginHandler = async (req: Request, res: Response) => {
 
       return res.status(HTTP_STATUS_CODE.OK).json({
         success: true,
-        message: 'GitHub authentication required',
+        message: 'gitHub authentication required',
         data: {
           device_code: deviceFlowResponse.data.device_code,
           user_code: deviceFlowResponse.data.user_code,
@@ -61,8 +61,8 @@ export const loginHandler = async (req: Request, res: Response) => {
     if (!tokenData.access_token) {
       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
         success: false,
-        error: 'Authorization pending or denied',
-        message: 'Please complete GitHub authorization or try again'
+        error: 'authorization pending or denied',
+        message: 'please complete gitHub authorization or try again'
       })
     }
 
@@ -95,7 +95,7 @@ export const loginHandler = async (req: Request, res: Response) => {
 
     return res.status(HTTP_STATUS_CODE.OK).json({
       success: true,
-      message: 'Login successful',
+      message: 'login successful',
       data: {
         token: jwtToken,
         user: {
@@ -103,7 +103,7 @@ export const loginHandler = async (req: Request, res: Response) => {
           username: user.username,
           name: user.name
         },
-        instructions: 'Use this token in Authorization header: Bearer <token>'
+        instructions: 'use this token in authorization header: Bearer <token>'
       }
     })
   } catch (error: any) {
@@ -113,8 +113,8 @@ export const loginHandler = async (req: Request, res: Response) => {
     ) {
       return res.status(HTTP_STATUS_CODE.ACCEPTED).json({
         success: false,
-        error: 'authorization_pending',
-        message: 'Please complete GitHub authorization in your browser'
+        error: 'authorization pending',
+        message: 'please complete gitHub authorization in your browser'
       })
     }
 
@@ -124,17 +124,15 @@ export const loginHandler = async (req: Request, res: Response) => {
     ) {
       return res.status(HTTP_STATUS_CODE.TOO_MANY_REQUESTS).json({
         success: false,
-        error: 'slow_down',
+        error: 'slow down',
         message: 'Too many requests, please wait before trying again'
       })
     }
 
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'Login failed',
-      message: 'An error occurred during authentication'
+      error: 'login failed',
+      message: 'an error occurred during authentication'
     })
-  } finally {
-    await prisma.$disconnect()
   }
 }

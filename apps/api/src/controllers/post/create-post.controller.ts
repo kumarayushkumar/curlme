@@ -18,6 +18,7 @@ const createPostController = async (content: string, userId: string) => {
 
   if (!post) return null
 
+  // Cache the new post (it will have 0 replies since it's new)
   await cachePost(post)
 
   return {

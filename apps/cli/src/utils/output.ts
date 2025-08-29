@@ -36,6 +36,10 @@ export function log(message: string): void {
   console.log(message)
 }
 
-export function formatOutput(data: string): void {
-  console.log('\n' + data + '\n')
+export function formatOutput(data: any): void {
+  if (typeof data === 'string') {
+    console.log('\n' + data + '\n')
+  } else {
+    console.log('\n' + JSON.stringify(data, null, 2) + '\n')
+  }
 }

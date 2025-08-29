@@ -4,7 +4,8 @@ export class ApiClient {
   private baseURL: string
 
   constructor() {
-    this.baseURL = 'https://api.curlme.dev'
+    // Allow overriding API URL via env; default to local dev
+    this.baseURL = process.env.CURLME_API_URL || 'http://localhost:8000'
   }
 
   async request(

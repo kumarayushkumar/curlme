@@ -11,7 +11,14 @@ const getPostController = async (
       replies: {
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
-        take: limit + 1
+        take: limit + 1, // Take one extra to check if there are more pages
+        include: {
+          user: {
+            select: {
+              username: true
+            }
+          }
+        }
       },
       user: {
         select: {
@@ -23,16 +30,30 @@ const getPostController = async (
 
   if (!post) return null
 
+  // Check if there are more replies than the current page limit
+  const hasNextPage = post.replies.length > limit
+  const replies = hasNextPage ? post.replies.slice(0, limit) : post.replies
+
   return {
     id: post.id,
     content: post.content,
     createdAt: post.createdAt.toISOString(),
-    replies: post.replies.map(reply => ({
+    likesCount: post.likesCount,
+    repliesCount: post.repliesCount,
+    replies: replies.map(reply => ({
       id: reply.id,
       content: reply.content,
-      createdAt: reply.createdAt.toISOString()
+      createdAt: reply.createdAt.toISOString(),
+      likesCount: reply.likesCount,
+      username: reply.user.username
     })),
-    username: post.user.username
+    username: post.user.username,
+    pagination: {
+      currentPage: page,
+      limit: limit,
+      hasNextPage: hasNextPage,
+      totalRepliesOnPage: replies.length
+    }
   }
 }
 

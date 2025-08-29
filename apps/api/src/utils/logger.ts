@@ -20,7 +20,6 @@ const logFormat = printf(
 )
 
 // Log filter
-const emergFilter = format((info, _) => (info.level === 'emerg' ? info : false))
 const errorFilter = format((info, _) => (info.level === 'error' ? info : false))
 const infoFilter = format((info, _) => (info.level === 'info' ? info : false))
 
@@ -59,14 +58,10 @@ const logger = createLogger({
     colorize({ all: true })
   ),
   transports: [
-    // Rotate emergency, error and info logs daily, keep for 14 days
-    logRotate('emergency', '14d', emergFilter()),
+    // Rotate error and info logs daily, keep for 14 days
     logRotate('error', '14d', errorFilter()),
     logRotate('info', '14d', infoFilter())
-  ],
-  // Rotate exception and rejection logs daily, keep longer
-  exceptionHandlers: [logRotate('exception', '30d')],
-  rejectionHandlers: [logRotate('rejection', '30d')]
+  ]
 })
 
 const logResReq = createLogger({

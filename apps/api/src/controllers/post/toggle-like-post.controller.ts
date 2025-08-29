@@ -1,4 +1,5 @@
 import { prisma } from '../../utils/database.js'
+import { updatePostInCache } from '../../utils/redis.js'
 
 const toggleLikePostController = async (postId: string, userId: string) => {
   const post = await prisma.post.findUnique({
@@ -19,6 +20,7 @@ const toggleLikePostController = async (postId: string, userId: string) => {
   })
 
   let action: 'liked' | 'unliked'
+  let newLikesCount: number
 
   if (existingLike) {
     // Unlike: Remove like and decrement count
@@ -33,6 +35,7 @@ const toggleLikePostController = async (postId: string, userId: string) => {
     ])
 
     action = 'unliked'
+    newLikesCount = post.likesCount - 1
   } else {
     // Like: Add like and increment count
     await prisma.$transaction([
@@ -49,7 +52,11 @@ const toggleLikePostController = async (postId: string, userId: string) => {
     ])
 
     action = 'liked'
+    newLikesCount = post.likesCount + 1
   }
+
+  // Update the cache with new likes count
+  await updatePostInCache(postId, { likesCount: newLikesCount })
 
   return {
     message: `Post ${action} successfully`

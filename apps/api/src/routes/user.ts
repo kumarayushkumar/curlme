@@ -57,7 +57,8 @@ router.get(
 router.get(
   '/get-post/:postId',
   limiter,
-  validateSchema(postIdSchema),
+  validateSchema(postIdSchema, 'params'),
+  validateSchema(paginationSchema, 'query'),
   authMiddleware,
   catchError(getPostHandler)
 )
@@ -71,14 +72,14 @@ router.post(
 router.delete(
   '/delete-post/:postId',
   limiter,
-  validateSchema(postIdSchema),
+  validateSchema(postIdSchema, 'params'),
   authMiddleware,
   catchError(deletePostHandler)
 )
 router.post(
   '/toggle-like-post/:postId',
   limiter,
-  validateSchema(postIdSchema),
+  validateSchema(postIdSchema, 'params'),
   authMiddleware,
   catchError(toggleLikePostHandler)
 )
@@ -95,14 +96,14 @@ router.post(
 router.delete(
   '/delete-reply/:replyId',
   limiter,
-  validateSchema(replyIdSchema),
+  validateSchema(replyIdSchema, 'params'),
   authMiddleware,
   catchError(deleteReplyHandler)
 )
 router.post(
   '/toggle-like-reply/:replyId',
   limiter,
-  validateSchema(replyIdSchema),
+  validateSchema(replyIdSchema, 'params'),
   authMiddleware,
   catchError(toggleLikeReplyHandler)
 )

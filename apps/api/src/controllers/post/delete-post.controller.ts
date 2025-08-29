@@ -1,16 +1,33 @@
+import type { CachedPost } from '../../types/post.js'
 import { prisma } from '../../utils/database.js'
+import { logger } from '../../utils/logger.js'
+import { getPostsFromCache, setPostsInCache } from '../../utils/redis.js'
 
 const deletePostController = async (postId: string, userId: string) => {
-  await prisma.$transaction([
-    prisma.post.delete({
-      where: { id: postId, userId: userId }
-    }),
-    prisma.reply.deleteMany({
-      where: { postId: postId }
-    })
-  ])
+  const post = await prisma.post.findFirst({ where: { id: postId, userId } })
+  if (!post) return null
 
-  return true
+  await prisma.$transaction(async tx => {
+    await tx.reply.deleteMany({ where: { postId } })
+    await tx.like.deleteMany({ where: { postId } })
+    await tx.post.delete({ where: { id: postId } })
+  })
+
+  // Invalidate cache after post deletion
+  try {
+    const cachedPosts = await getPostsFromCache()
+    if (cachedPosts) {
+      await setPostsInCache(
+        cachedPosts.filter((post: CachedPost) => post.id !== postId)
+      )
+    }
+  } catch (error) {
+    logger.error(
+      `${__filename} | failed to invalidate cache after post deletion: ${error}`
+    )
+  }
+
+  return { id: postId }
 }
 
 export default deletePostController

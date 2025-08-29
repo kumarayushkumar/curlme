@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express'
 import getUserController from '../controllers/user/get-user.controller.js'
 import { HTTP_STATUS_CODE } from '../utils/constants.js'
+import { logger } from '../utils/logger.js'
 
 export const getUserHandler = async (req: Request, res: Response) => {
   try {
@@ -15,18 +16,22 @@ export const getUserHandler = async (req: Request, res: Response) => {
 
       if (!profile) {
         return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-          error: 'User not found',
-          message: `User '${requestedUsername}' could not be found`
+          success: false,
+          error: 'user not found',
+          message: `user '${requestedUsername}' could not be found`
         })
       }
     } else {
-      // Fetching own profile
       profile = await getUserController(currentUserId)
 
       if (!profile) {
+        logger.error(
+          `${__filename} | cannot find own profile for userId: ${currentUserId}`
+        )
         return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-          error: 'User not found',
-          message: 'Your profile could not be found'
+          success: false,
+          error: 'user not found',
+          message: 'your profile could not be found'
         })
       }
     }
@@ -34,8 +39,9 @@ export const getUserHandler = async (req: Request, res: Response) => {
     return res.status(HTTP_STATUS_CODE.OK).json(profile)
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
-      error: 'Profile fetch failed',
-      message: 'An error occurred while fetching profile'
+      success: false,
+      error: 'profile fetch failed',
+      message: 'an error occurred while fetching profile'
     })
   }
 }

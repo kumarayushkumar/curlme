@@ -43,3 +43,5 @@ export const VERSION = '1.0.0'
 export const JWT_EXPIRE = '30d'
 
 export const POST_LIMIT = 50 // Maximum number of posts to cache
+
+export const CACHE_TTL = 1 * 60 * 60

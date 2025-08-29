@@ -7,18 +7,19 @@ export const deviceCodeSchema = z.object({
 
 // post
 export const paginationSchema = z.object({
-  page: z.number().min(1).optional(),
-  limit: z.number().min(1).optional()
+  page: z.coerce.number().min(1).optional(),
+  limit: z.coerce.number().min(1).optional()
 })
 
-export const postIdSchema = paginationSchema.extend({
+export const postIdSchema = z.object({
   postId: z.uuid('invalid post id')
 })
+
 export const contentSchema = z.object({
   content: z
     .string()
-    .min(1, 'reply is required')
-    .max(500, 'reply cannot exceed 500 characters')
+    .min(1, 'content is required')
+    .max(500, 'content cannot exceed 500 characters')
     .trim()
 })
 

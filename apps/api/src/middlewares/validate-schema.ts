@@ -22,7 +22,7 @@ export const validateSchema = (
       res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
         success: false,
         error: error.errors,
-        message: 'Invalid request data'
+        message: 'invalid request data'
       })
     }
   }

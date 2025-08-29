@@ -14,21 +14,21 @@ export const createReplyHandler = async (req: Request, res: Response) => {
     if (!reply) {
       return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
         success: false,
-        error: 'Reply creation failed',
-        message: 'An error occurred while creating reply'
+        error: 'reply creation failed',
+        message: 'an error occurred while creating reply'
       })
     }
 
     return res.status(HTTP_STATUS_CODE.CREATED).json({
       success: true,
       data: reply,
-      message: 'Reply created successfully'
+      message: 'reply created successfully'
     })
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'Reply creation failed',
-      message: 'An error occurred while creating post'
+      error: 'reply creation failed',
+      message: 'an error occurred while creating reply'
     })
   }
 }
@@ -43,21 +43,21 @@ export const deleteReplyHandler = async (req: Request, res: Response) => {
     if (!reply) {
       return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
         success: false,
-        error: 'Reply not found',
-        message: 'The reply you are trying to delete does not exist'
+        error: 'reply not found',
+        message: 'the reply you are trying to delete does not exist'
       })
     }
 
     return res.status(HTTP_STATUS_CODE.OK).json({
       success: true,
       data: reply,
-      message: 'Reply deleted successfully'
+      message: 'reply deleted successfully'
     })
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'Post deletion failed',
-      message: 'An error occurred while deleting post'
+      error: 'reply deletion failed',
+      message: 'an error occurred while deleting reply'
     })
   }
 }
@@ -72,8 +72,8 @@ export const toggleLikeReplyHandler = async (req: Request, res: Response) => {
     if (!result) {
       return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
         success: false,
-        error: 'Reply not found',
-        message: 'The reply you are trying to like/unlike does not exist'
+        error: 'reply not found',
+        message: 'the reply you are trying to like/unlike does not exist'
       })
     }
 
@@ -85,8 +85,8 @@ export const toggleLikeReplyHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'Internal Server Error',
-      message: 'An error occurred while toggling reply like'
+      error: 'reply like/unlike failed',
+      message: 'an error occurred while toggling reply like'
     })
   }
 }
