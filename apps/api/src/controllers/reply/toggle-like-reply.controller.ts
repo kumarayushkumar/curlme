@@ -1,4 +1,4 @@
-import { prisma } from '../../utils/database.js'
+import { prisma } from '../../config/database.js'
 
 const toggleLikeReplyController = async (replyId: string, userId: string) => {
   const reply = await prisma.reply.findUnique({

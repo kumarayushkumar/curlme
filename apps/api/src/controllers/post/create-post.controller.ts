@@ -1,4 +1,4 @@
-import { prisma } from '../../utils/database.js'
+import { prisma } from '../../config/database.js'
 import { cachePost } from '../../utils/redis.js'
 
 const createPostController = async (content: string, userId: string) => {

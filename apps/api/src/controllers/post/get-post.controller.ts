@@ -1,4 +1,4 @@
-import { prisma } from '../../utils/database.js'
+import { prisma } from '../../config/database.js'
 
 const getPostController = async (
   postId: string,

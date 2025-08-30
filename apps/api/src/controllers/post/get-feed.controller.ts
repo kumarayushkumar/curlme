@@ -1,4 +1,4 @@
-import { prisma } from '../../utils/database.js'
+import { prisma } from '../../config/database.js'
 import { logger } from '../../utils/logger.js'
 import { getPostsFromCache, warmFeedCache } from '../../utils/redis.js'
 

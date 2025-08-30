@@ -1,7 +1,7 @@
+import { prisma } from '../config/database.js'
 import { redisConnection } from '../config/redis.js'
 import type { CachedPost } from '../types/post.js'
 import { CACHE_TTL, POST_LIMIT } from './constants.js'
-import { prisma } from './database.js'
 import { logger } from './logger.js'
 
 export const cachePost = async (post: CachedPost) => {

@@ -1,4 +1,4 @@
-import { prisma } from '../../utils/database.js'
+import { prisma } from '../../config/database.js'
 import { updatePostInCache } from '../../utils/redis.js'
 
 const createReplyController = async (

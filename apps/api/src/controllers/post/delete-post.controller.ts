@@ -1,5 +1,5 @@
+import { prisma } from '../../config/database.js'
 import type { CachedPost } from '../../types/post.js'
-import { prisma } from '../../utils/database.js'
 import { logger } from '../../utils/logger.js'
 import { getPostsFromCache, setPostsInCache } from '../../utils/redis.js'
 
