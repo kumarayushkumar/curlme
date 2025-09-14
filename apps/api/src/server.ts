@@ -86,7 +86,7 @@ const serverConfig = () => {
         uptime: process.uptime(),
         version: VERSION
       },
-      message: 'server is running'
+      message: 'curlme server is running'
     })
   })
 

@@ -36,7 +36,11 @@ export const getUserHandler = async (req: Request, res: Response) => {
       }
     }
 
-    return res.status(HTTP_STATUS_CODE.OK).json(profile)
+    return res.status(HTTP_STATUS_CODE.OK).json({
+      success: true,
+      data: { profile },
+      message: 'profile fetched successfully'
+    })
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,

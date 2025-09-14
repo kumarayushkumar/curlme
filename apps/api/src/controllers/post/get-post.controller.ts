@@ -40,7 +40,7 @@ const getPostController = async (
     createdAt: post.createdAt.toISOString(),
     likesCount: post.likesCount,
     repliesCount: post.repliesCount,
-    replies: replies.map(reply => ({
+    replies: replies.map((reply: any) => ({
       id: reply.id,
       content: reply.content,
       createdAt: reply.createdAt.toISOString(),

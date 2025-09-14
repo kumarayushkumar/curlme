@@ -7,7 +7,7 @@ const command = args[0]
 
 if (!command) {
   console.log(`
-Curlme - vibe with real developers
+Curlme - vibe with developers
 
 Usage:
   curlme <command> [options]
