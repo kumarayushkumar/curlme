@@ -17,7 +17,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
       if (!profile) {
         return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
           success: false,
-          error: 'user not found',
+          error: 'not_found',
           message: `user '${requestedUsername}' could not be found`
         })
       }
@@ -30,7 +30,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
         )
         return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
           success: false,
-          error: 'user not found',
+          error: 'not_found',
           message: 'your profile could not be found'
         })
       }
@@ -44,7 +44,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'profile fetch failed',
+      error: 'internal_server_error',
       message: 'an error occurred while fetching profile'
     })
   }

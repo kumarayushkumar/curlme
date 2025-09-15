@@ -21,7 +21,7 @@ export const getFeedHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'feed fetch failed',
+      error: 'internal_server_error',
       message: 'an error occurred while fetching feed'
     })
   }
@@ -37,7 +37,7 @@ export const getPostHandler = async (req: Request, res: Response) => {
     if (!post) {
       return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
         success: false,
-        error: 'post not found',
+        error: 'not_found',
         message: 'the requested post does not exist'
       })
     }
@@ -50,7 +50,7 @@ export const getPostHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'post fetch failed',
+      error: 'internal_server_error',
       message: 'an error occurred while fetching post'
     })
   }
@@ -65,7 +65,7 @@ export const createPostHandler = async (req: Request, res: Response) => {
     if (!post) {
       return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
         success: false,
-        error: 'post creation failed',
+        error: 'internal_server_error',
         message: 'an error occurred while creating post'
       })
     }
@@ -78,7 +78,7 @@ export const createPostHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'post creation failed',
+      error: 'internal_server_error',
       message: 'an error occurred while creating post'
     })
   }
@@ -94,7 +94,7 @@ export const deletePostHandler = async (req: Request, res: Response) => {
     if (!post) {
       return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
         success: false,
-        error: 'post not found',
+        error: 'not_found',
         message: 'the post you are trying to delete does not exist'
       })
     }
@@ -107,7 +107,7 @@ export const deletePostHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'post deletion failed',
+      error: 'internal_server_error',
       message: 'an error occurred while deleting post'
     })
   }
@@ -123,7 +123,7 @@ export const toggleLikePostHandler = async (req: Request, res: Response) => {
     if (!result) {
       return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
         success: false,
-        error: 'post not found',
+        error: 'not_found',
         message: 'the post you are trying to like/unlike does not exist'
       })
     }
@@ -136,7 +136,7 @@ export const toggleLikePostHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'post like/unlike failed',
+      error: 'internal_server_error',
       message: 'an error occurred while toggling post like'
     })
   }

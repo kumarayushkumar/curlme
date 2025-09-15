@@ -15,7 +15,8 @@ Usage:
 Commands:
   login                      Authenticate with GitHub
   logout                     Clear authentication token
-  profile [username]         Show your profile or another user's profile
+  profile                    Show your profile
+  profile <username>         Show another user's profile
   post <content>             Create new post
   post-view <post-id>        View post and its comments
   post-delete <post-id>      Delete post
@@ -30,7 +31,7 @@ Examples:
   curlme login
   curlme post "Hello from the terminal!"
   curlme reply abc123 "Great post!"
-  curlme post-like abc123
+  curlme post-like 123123 
   curlme feed
   curlme profile
 `)

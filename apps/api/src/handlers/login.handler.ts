@@ -61,7 +61,7 @@ export const loginHandler = async (req: Request, res: Response) => {
     if (!tokenData.access_token) {
       return res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({
         success: false,
-        error: 'authorization pending or denied',
+        error: 'authorization_pending_or_denied',
         message: 'please complete gitHub authorization or try again'
       })
     }
@@ -113,7 +113,7 @@ export const loginHandler = async (req: Request, res: Response) => {
     ) {
       return res.status(HTTP_STATUS_CODE.ACCEPTED).json({
         success: false,
-        error: 'authorization pending',
+        error: 'authorization_pending',
         message: 'please complete gitHub authorization in your browser'
       })
     }
@@ -124,14 +124,14 @@ export const loginHandler = async (req: Request, res: Response) => {
     ) {
       return res.status(HTTP_STATUS_CODE.TOO_MANY_REQUESTS).json({
         success: false,
-        error: 'slow down',
+        error: 'too_many_requests',
         message: 'Too many requests, please wait before trying again'
       })
     }
 
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'login failed',
+      error: 'internal_server_error',
       message: 'an error occurred during authentication'
     })
   }

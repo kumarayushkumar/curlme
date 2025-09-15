@@ -14,7 +14,7 @@ export const createReplyHandler = async (req: Request, res: Response) => {
     if (!reply) {
       return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
         success: false,
-        error: 'reply creation failed',
+        error: 'internal_server_error',
         message: 'an error occurred while creating reply'
       })
     }
@@ -27,7 +27,7 @@ export const createReplyHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'reply creation failed',
+      error: 'internal_server_error',
       message: 'an error occurred while creating reply'
     })
   }
@@ -43,7 +43,7 @@ export const deleteReplyHandler = async (req: Request, res: Response) => {
     if (!reply) {
       return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
         success: false,
-        error: 'reply not found',
+        error: 'not_found',
         message: 'the reply you are trying to delete does not exist'
       })
     }
@@ -56,7 +56,7 @@ export const deleteReplyHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'reply deletion failed',
+      error: 'internal_server_error',
       message: 'an error occurred while deleting reply'
     })
   }
@@ -72,7 +72,7 @@ export const toggleLikeReplyHandler = async (req: Request, res: Response) => {
     if (!result) {
       return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
         success: false,
-        error: 'reply not found',
+        error: 'not_found',
         message: 'the reply you are trying to like/unlike does not exist'
       })
     }
@@ -85,7 +85,7 @@ export const toggleLikeReplyHandler = async (req: Request, res: Response) => {
   } catch (error) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'reply like/unlike failed',
+      error: 'internal_server_error',
       message: 'an error occurred while toggling reply like'
     })
   }
