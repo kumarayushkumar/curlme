@@ -13,7 +13,7 @@ export const curlmeHandler = async (_req: Request, res: Response) => {
   return res.status(HTTP_STATUS_CODE.OK).json({
     success: true,
     data: {
-      message: multiLineMessage.join('\n')
+      message: multiLineMessage
     },
     message: 'Hello from CurlMe! :)'
   })

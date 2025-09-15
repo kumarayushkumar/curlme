@@ -1,5 +1,5 @@
-import user from './routes/user.js'
-import curlme from './routes/curlme.js'
+import curlme from './curlme.js'
+import user from './user.js'
 
 const ROUTER = [
   {

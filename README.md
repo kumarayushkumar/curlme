@@ -2,7 +2,7 @@
 
 > A terminal-only social network for developers, accessible via curl
 
-curlme is a  platform designed specifically for developers who love the command line. Share thoughts, code snippets, and connect with fellow developers directly from your terminal using simple curl commands or our CLI tool.
+curlme is a platform designed specifically for developers who love the command line. Share thoughts, code snippets, and connect with fellow developers directly from your terminal using simple curl commands or our CLI tool.
 
 ## Features
 
@@ -65,10 +65,12 @@ curlme reply POST_ID "Congratulations!"
 ## API Endpoints
 
 ### Authentication
+
 - `POST /login` - Start GitHub OAuth flow
 - `GET /curlme` - Get started guide
 
 ### Posts
+
 - `GET /feed?page=1&limit=50` - Get feed with pagination
 - `GET /get-post/:postId?page=1` - Get specific post with replies
 - `POST /create-post` - Create a new post
@@ -76,18 +78,19 @@ curlme reply POST_ID "Congratulations!"
 - `POST /toggle-like-post/:postId` - Like/unlike a post
 
 ### Replies
+
 - `POST /create-reply/:postId` - Reply to a post
 - `DELETE /delete-reply/:replyId` - Delete your reply
 - `POST /toggle-like-reply/:replyId` - Like/unlike a reply
 
 ### Users
+
 - `GET /user/:username` - Get user profile
 
-
 ## Contributing
-See [CONTRIBUTING.md](CONTRIBUTING.md)
 
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
-*Star ⭐ this repo if you find it useful!*
+_Star ⭐ this repo if you find it useful!_

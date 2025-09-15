@@ -50,7 +50,7 @@ router.get(
 router.get(
   '/feed',
   limiter,
-  validateSchema(paginationSchema),
+  validateSchema(paginationSchema, 'query'),
   authMiddleware,
   catchError(getFeedHandler)
 )

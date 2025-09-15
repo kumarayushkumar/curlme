@@ -3,6 +3,7 @@
 Thanks for your interest in improving this project. This guide explains how to set up your environment, make changes safely, and submit a high-quality pull request.
 
 ### Repo layout (monorepo)
+
 - apps/frontend:
 - apps/api: Express + TypeScript + PostgreSQL + Redis
 - apps/cli: TypeScript CLI
@@ -68,6 +69,7 @@ cd apps/cli && npm run dev    # CLI in watch mode
 ### Workflow Steps
 
 1. **Create a branch**:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -75,6 +77,7 @@ cd apps/cli && npm run dev    # CLI in watch mode
 2. **Make changes**: Follow our coding standards
 
 3. **Test your changes**:
+
    ```bash
    npm run build        # Build all packages
    npm run check-types  # Type checking
@@ -83,6 +86,7 @@ cd apps/cli && npm run dev    # CLI in watch mode
    ```
 
 4. **Commit your changes**:
+
    ```bash
    git add .
    git commit -m "feat: add amazing new feature"
@@ -144,4 +148,4 @@ function createPost(data: any) { ... }
 
 Thank you for contributing to curlme!
 
-*Every contribution, no matter how small, makes a difference.*
+_Every contribution, no matter how small, makes a difference._
