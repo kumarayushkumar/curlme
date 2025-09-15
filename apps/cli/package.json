@@ -8,9 +8,7 @@
     "curlme": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsx watch src/index.ts",
-    "start": "node dist/index.js",
+    "build": "tsc && chmod +x dist/index.js",
     "check-types": "tsc --noEmit",
     "install-global": "npm run build && npm install -g .",
     "uninstall-global": "npm uninstall -g curlme-cli"
@@ -21,8 +19,12 @@
     "terminal",
     "curl"
   ],
-  "author": "curlme",
+  "author": {
+    "name": "ayush kumar",
+    "url": "https://github.com/kumarayushkumar"
+  },
   "license": "MIT",
+
   "dependencies": {
     "axios": "^1.11.0"
   },
@@ -33,5 +35,21 @@
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kumarayushkumar/curlme.git",
+    "directory": "apps/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/kumarayushkumar/curlme/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "package.json"
+  ]
 }

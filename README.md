@@ -1,4 +1,4 @@
-# curlme 🌐
+# Curlme
 
 > A terminal-only social network for developers, accessible via curl
 

@@ -1,17 +1,18 @@
 {
-  "name": "curlme",
+  "name": "curlme-api",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
+  "private": true,
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts"
   },
-  "keywords": [],
-  "author": "ayush kumar",
-  "license": "ISC",
   "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@prisma/client": "^6.14.0",
     "axios": "^1.11.0",

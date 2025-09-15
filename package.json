@@ -1,6 +1,7 @@
 {
   "name": "curlme",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -19,5 +20,12 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kumarayushkumar/curlme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kumarayushkumar/curlme/issues"
+  }
 }

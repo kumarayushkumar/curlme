@@ -1,4 +1,4 @@
-# Contributing to curlme
+# Contributing to Curlme
 
 Thanks for your interest in improving this project. This guide explains how to set up your environment, make changes safely, and submit a high-quality pull request.
 
@@ -15,9 +15,9 @@ Thanks for your interest in improving this project. This guide explains how to s
 
 1. Fork the repository on GitHub
 2. Clone your fork locally
-3. Add the upstream remote:
+3. Add the upstream remote
 
-## 🛠️ Development Setup
+## Development Setup
 
 ### 1. Install Dependencies
 
@@ -56,12 +56,12 @@ npx prisma migrate dev --name init
 ### 4. Start Development Servers
 
 ```bash
-# Start both API and CLI in watch mode
-npm run dev
 
-# Or individually
+# Start API
 cd apps/api && npm run dev    # API server on :3000
-cd apps/cli && npm run dev    # CLI in watch mode
+
+# Install CLI
+cd apps/cli && npm run build && npm run install-global
 ```
 
 ## Development Workflow
