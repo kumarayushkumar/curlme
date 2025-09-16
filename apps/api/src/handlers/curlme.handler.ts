@@ -7,7 +7,8 @@ export const curlmeHandler = async (_req: Request, res: Response) => {
     'I made this project for fun',
     'If you are enjoying using it, let me know!',
     'If you want to request a feature or report a bug, feel free to reach out!',
-    'https://x.com/ayushkumarkeirn'
+    'https://x.com/ayushkumarkeirn',
+    'If you want to contribute, visit https://github.com/kumarayushkumar/curlme'
   ]
 
   return res.status(HTTP_STATUS_CODE.OK).json({

@@ -11,3 +11,4 @@ if (!command) {
 }
 
 handleCommand(command, args.slice(1))
+

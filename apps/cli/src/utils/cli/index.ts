@@ -55,7 +55,7 @@ ${colorize('Commands:', 'bold')}
 
   ${colorize('Info:', 'yellow')}
   info                       Show curlme welcome message
-  curlme                     Show curlme welcome message
+  feedback                   Contact support or report issues
 
   ${colorize('Help:', 'yellow')}
   help                       Show this help message
@@ -108,7 +108,7 @@ export async function handleCommand(command: string, args: string[]) {
         }
         break
       case 'info':
-      case 'curlme':
+      case 'feedback':
         await handleCurlmeInfo()
         break
       case 'help':
