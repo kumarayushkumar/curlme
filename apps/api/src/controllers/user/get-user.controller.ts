@@ -1,6 +1,33 @@
+/**
+ * Controller for retrieving user profiles
+ */
+
 import { prisma } from '../../config/database.js'
 
-const getUserController = async (userId?: string | null, username?: string) => {
+/**
+ * Retrieves user profile by ID or username
+ *
+ * @param {string} userId - Optional user ID to search by
+ * @param {string} username - Optional username to search by
+ * @returns {Promise<{id: string, username: string, name: string, joined: string, posts_count: number, replies_count: number, recent_posts: Array<{id: string, content: string, likes: number, created: string}>}|null>} - User profile data or null if not found
+ */
+const getUserController = async (
+  userId?: string | null,
+  username?: string
+): Promise<{
+  id: string
+  username: string
+  name: string
+  joined: string
+  posts_count: number
+  replies_count: number
+  recent_posts: Array<{
+    id: string
+    content: string
+    likes: number
+    created: string
+  }>
+} | null> => {
   let whereClause
 
   if (!username && !userId) return null

@@ -1,6 +1,20 @@
+/**
+ * Controller for toggling reply likes
+ */
+
 import { prisma } from '../../config/database.js'
 
-const toggleLikeReplyController = async (replyId: string, userId: string) => {
+/**
+ * Toggles like/unlike status for a reply
+ *
+ * @param {string} replyId - The ID of the reply to like/unlike
+ * @param {string} userId - The ID of the user performing the action
+ * @returns {Promise<{message: string}|null>} - Updated like status or null if reply not found
+ */
+const toggleLikeReplyController = async (
+  replyId: string,
+  userId: string
+): Promise<{ message: string } | null> => {
   const reply = await prisma.reply.findUnique({
     where: { id: replyId },
     include: { likes: true }

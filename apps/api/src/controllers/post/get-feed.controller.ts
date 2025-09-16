@@ -1,8 +1,31 @@
+/**
+ * Controller for retrieving paginated feed of posts
+ */
+
 import { prisma } from '../../config/database.js'
 import { logger } from '../../utils/logger.js'
 import { getPostsFromCache, warmFeedCache } from '../../utils/redis.js'
 
-const getFeedController = async (page: number, limit: number) => {
+/**
+ * Retrieves paginated feed of posts with caching
+ *
+ * @param {number} page - Page number for pagination
+ * @param {number} limit - Number of posts per page
+ * @returns {Promise<{posts: any[], pagination: {currentPage: number, hasNextPage: boolean, hasPreviousPage: boolean, totalPostsOnPage: number, limit: number}}>} - Feed data with posts and pagination info
+ */
+const getFeedController = async (
+  page: number,
+  limit: number
+): Promise<{
+  posts: any[]
+  pagination: {
+    currentPage: number
+    hasNextPage: boolean
+    hasPreviousPage: boolean
+    totalPostsOnPage: number
+    limit: number
+  }
+}> => {
   let cachedPosts = await getPostsFromCache()
 
   if (cachedPosts.length === 0) {
@@ -41,6 +64,7 @@ const getFeedController = async (page: number, limit: number) => {
         currentPage: page,
         limit: limit,
         hasNextPage: hasNextPage,
+        hasPreviousPage: page > 1,
         totalPostsOnPage: resultPosts.length
       }
     }
@@ -65,6 +89,7 @@ const getFeedController = async (page: number, limit: number) => {
       currentPage: page,
       limit: limit,
       hasNextPage: hasNextPage,
+      hasPreviousPage: page > 1,
       totalPostsOnPage: resultPosts.length
     }
   }

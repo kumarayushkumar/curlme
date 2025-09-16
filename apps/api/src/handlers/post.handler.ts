@@ -1,3 +1,7 @@
+/**
+ * Handlers for post-related API endpoints
+ */
+
 import type { Request, Response } from 'express'
 import createPostController from '../controllers/post/create-post.controller.js'
 import deletePostController from '../controllers/post/delete-post.controller.js'
@@ -6,6 +10,9 @@ import getPostController from '../controllers/post/get-post.controller.js'
 import toggleLikePostController from '../controllers/post/toggle-like-post.controller.js'
 import { HTTP_STATUS_CODE, POST_LIMIT } from '../utils/constants.js'
 
+/**
+ * Handler for retrieving paginated feed of posts
+ */
 export const getFeedHandler = async (req: Request, res: Response) => {
   try {
     const page = parseInt(req.query.page as string) || 1
@@ -27,6 +34,9 @@ export const getFeedHandler = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * Handler for retrieving a single post with replies
+ */
 export const getPostHandler = async (req: Request, res: Response) => {
   try {
     const postId = req.params.postId as string
@@ -56,6 +66,9 @@ export const getPostHandler = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * Handler for creating a new post
+ */
 export const createPostHandler = async (req: Request, res: Response) => {
   try {
     const userId = req.user!.userId
@@ -84,6 +97,9 @@ export const createPostHandler = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * Handler for deleting a post
+ */
 export const deletePostHandler = async (req: Request, res: Response) => {
   try {
     const postId = req.params.postId as string
@@ -113,6 +129,9 @@ export const deletePostHandler = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * Handler for toggling like/unlike on a post
+ */
 export const toggleLikePostHandler = async (req: Request, res: Response) => {
   try {
     const postId = req.params.postId as string

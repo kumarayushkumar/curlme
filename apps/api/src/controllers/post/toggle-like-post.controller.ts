@@ -1,7 +1,21 @@
+/**
+ * Controller for toggling post likes
+ */
+
 import { prisma } from '../../config/database.js'
 import { updatePostInCache } from '../../utils/redis.js'
 
-const toggleLikePostController = async (postId: string, userId: string) => {
+/**
+ * Toggles like/unlike status for a post
+ *
+ * @param {string} postId - The ID of the post to like/unlike
+ * @param {string} userId - The ID of the user performing the action
+ * @returns {Promise<{message: string}|null>} - Updated like status or null if post not found
+ */
+const toggleLikePostController = async (
+  postId: string,
+  userId: string
+): Promise<{ message: string } | null> => {
   const post = await prisma.post.findUnique({
     where: { id: postId },
     include: { likes: true }

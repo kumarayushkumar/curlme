@@ -1,9 +1,17 @@
+/**
+ * Utility functions for caching and retrieving posts using Redis
+ */
 import { prisma } from '../config/database.js'
 import { redisConnection } from '../config/redis.js'
 import type { CachedPost } from '../types/post.js'
 import { CACHE_TTL, POST_LIMIT } from './constants.js'
 import { logger } from './logger.js'
 
+/**
+ * Caches a post object in Redis
+ *
+ * @param {CachedPost} post - Post object to cache
+ */
 export const cachePost = async (post: CachedPost) => {
   try {
     const cachedPosts = await redisConnection.get('feed')
@@ -20,6 +28,11 @@ export const cachePost = async (post: CachedPost) => {
   }
 }
 
+/**
+ * Retrieves posts from Redis cache
+ *
+ * @returns {Promise<CachedPost[]>} - Array of cached posts or empty array if none
+ */
 export const getPostsFromCache = async (): Promise<CachedPost[]> => {
   try {
     const cachedPosts = await redisConnection.get('feed')
@@ -30,6 +43,11 @@ export const getPostsFromCache = async (): Promise<CachedPost[]> => {
   }
 }
 
+/**
+ * Sets the entire posts array in Redis cache
+ *
+ * @param {CachedPost[]} posts - Array of post objects to cache
+ */
 export const setPostsInCache = async (posts: CachedPost[]) => {
   try {
     await redisConnection.set('feed', JSON.stringify(posts), 'EX', CACHE_TTL)
@@ -38,7 +56,9 @@ export const setPostsInCache = async (posts: CachedPost[]) => {
   }
 }
 
-// Function to warm up the cache with fresh data from DB
+/**
+ * Warms up the cache with fresh data from the database
+ */
 export const warmFeedCache = async () => {
   try {
     const posts = await prisma.post.findMany({
@@ -63,7 +83,12 @@ export const warmFeedCache = async () => {
   }
 }
 
-// Function to update a specific post's counts in cache
+/**
+ * Updates specific fields of a post in Redis cache
+ *
+ * @param {string} postId - ID of the post to update
+ * @param {{likesCount?: number, replyCountChange?: number}} updates - Fields to update
+ */
 export const updatePostInCache = async (
   postId: string,
   updates: { likesCount?: number; replyCountChange?: number }

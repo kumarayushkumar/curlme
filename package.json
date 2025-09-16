@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
     "turbo": "^2.5.6"
   },
@@ -29,6 +30,10 @@
   },
   "bugs": {
     "url": "https://github.com/kumarayushkumar/curlme/issues"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,md,json}": [
+      "prettier --write"
+    ]
   }
 }
-

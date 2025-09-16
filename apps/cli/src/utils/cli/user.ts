@@ -1,6 +1,14 @@
+/**
+ * Handlers for user-related CLI commands
+ */
+
 import { apiClient } from '../api.js'
 import { error, formatOutput, info } from '../output.js'
 
+/**
+ * Handles fetching user profile by username or current user if no username is provided
+ * @param {string} [username] - Optional username to fetch profile for
+ */
 export async function handleProfile(username?: string) {
   try {
     let endpoint = '/profile'

@@ -1,8 +1,15 @@
+/**
+ * Handlers for user-related API endpoints
+ */
+
 import type { Request, Response } from 'express'
 import getUserController from '../controllers/user/get-user.controller.js'
 import { HTTP_STATUS_CODE } from '../utils/constants.js'
 import { logger } from '../utils/logger.js'
 
+/**
+ * Handler for retrieving user profile by userId or username
+ */
 export const getUserHandler = async (req: Request, res: Response) => {
   try {
     const currentUserId = req.user!.userId

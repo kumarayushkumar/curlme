@@ -1,6 +1,13 @@
+/**
+ * Handler for curlme welcome and info endpoints
+ */
+
 import type { Request, Response } from 'express'
 import { HTTP_STATUS_CODE } from '../utils/constants.js'
 
+/**
+ * Handler for the curlme welcome endpoint
+ */
 export const curlmeHandler = async (_req: Request, res: Response) => {
   const multiLineMessage = [
     'Welcome to CurlMe!',

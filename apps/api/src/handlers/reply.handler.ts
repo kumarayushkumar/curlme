@@ -1,9 +1,16 @@
+/**
+ * Handlers for reply-related API endpoints
+ */
+
 import type { Request, Response } from 'express'
-import { HTTP_STATUS_CODE } from '../utils/constants.js'
 import createReplyController from '../controllers/reply/create-reply.controller.js'
 import deleteReplyController from '../controllers/reply/delete-reply.controller.js'
 import toggleLikeReplyController from '../controllers/reply/toggle-like-reply.controller.js'
+import { HTTP_STATUS_CODE } from '../utils/constants.js'
 
+/**
+ * Handler for creating a new reply
+ */
 export const createReplyHandler = async (req: Request, res: Response) => {
   try {
     const userId = req.user!.userId
@@ -33,6 +40,9 @@ export const createReplyHandler = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * Handler for deleting a reply
+ */
 export const deleteReplyHandler = async (req: Request, res: Response) => {
   try {
     const replyId = req.params.replyId as string
@@ -62,6 +72,9 @@ export const deleteReplyHandler = async (req: Request, res: Response) => {
   }
 }
 
+/**
+ * Handler for toggling like/unlike on a reply
+ */
 export const toggleLikeReplyHandler = async (req: Request, res: Response) => {
   try {
     const replyId = req.params.replyId as string

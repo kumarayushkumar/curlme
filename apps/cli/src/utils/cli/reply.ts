@@ -1,6 +1,15 @@
+/**
+ * Handlers for reply-related CLI commands
+ */
+
 import { apiClient } from '../api.js'
 import { error, formatOutput, info } from '../output.js'
 
+/**
+ * Handles creating a reply to a post
+ * @param {string} postId - The ID of the post to reply to
+ * @param {string} content - The content of the reply
+ */
 export async function handleReply(postId: string, content: string) {
   try {
     if (!postId) {
@@ -26,6 +35,10 @@ export async function handleReply(postId: string, content: string) {
   }
 }
 
+/**
+ * Handles deleting a reply by ID
+ * @param {string} replyId - The ID of the reply to delete
+ */
 export async function handleDeleteReply(replyId: string) {
   try {
     if (!replyId) {
@@ -41,6 +54,10 @@ export async function handleDeleteReply(replyId: string) {
   }
 }
 
+/**
+ * Handles liking/unliking a reply by ID
+ * @param {string} replyId - The ID of the reply to like/unlike
+ */
 export async function handleLikeReply(replyId: string) {
   try {
     if (!replyId) {

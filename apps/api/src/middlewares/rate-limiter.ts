@@ -1,7 +1,14 @@
+/**
+ * Rate limiting middleware to prevent API abuse
+ */
+
 import { rateLimit } from 'express-rate-limit'
 import { HTTP_STATUS_CODE } from '../utils/constants.js'
 import { logger } from '../utils/logger.js'
 
+/**
+ * Rate limiting middleware to prevent API abuse
+ */
 export const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
   limit: 10,

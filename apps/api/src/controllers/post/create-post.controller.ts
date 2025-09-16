@@ -1,7 +1,21 @@
+/**
+ * Controller for creating new posts
+ */
+
 import { prisma } from '../../config/database.js'
 import { cachePost } from '../../utils/redis.js'
 
-const createPostController = async (content: string, userId: string) => {
+/**
+ * Creates a new post for a user
+ *
+ * @param {string} content - The post content
+ * @param {string} userId - The ID of the user creating the post
+ * @returns {Promise<{postId: string, content: string, createdAt: string}|null>} - Post data or null if creation failed
+ */
+const createPostController = async (
+  content: string,
+  userId: string
+): Promise<{ postId: string; content: string; createdAt: string } | null> => {
   const post = await prisma.post.create({
     data: {
       content,

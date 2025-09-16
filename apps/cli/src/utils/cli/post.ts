@@ -1,7 +1,15 @@
+/**
+ * Handlers for post-related CLI commands
+ */
+
 import * as readline from 'readline'
 import { apiClient } from '../api.js'
 import { colorize, error, formatOutput, info } from '../output.js'
 
+/**
+ * Handles creating a new post with given content
+ * @param {string} content - The content of the post
+ */
 export async function handlePost(content: string) {
   try {
     if (!content.trim()) {
@@ -17,6 +25,10 @@ export async function handlePost(content: string) {
   }
 }
 
+/**
+ * Handles fetching and displaying the feed with optional pagination
+ * @param {string} [page] - Optional page number for pagination
+ */
 export async function handleFeed(page?: string) {
   try {
     const pageNum = page ? parseInt(page) : 1
@@ -54,6 +66,9 @@ export async function handleFeed(page?: string) {
   }
 }
 
+/**
+ * Handles the interactive feed mode with keyboard navigation
+ */
 export async function handleInteractiveFeed() {
   let currentPage = 1
   let isLoading = false
@@ -243,6 +258,10 @@ export async function handleInteractiveFeed() {
   await displayFeed(currentPage)
 }
 
+/**
+ * Handles deleting a post by ID
+ * @param {string} postId - The ID of the post to delete
+ */
 export async function handleDeletePost(postId: string) {
   try {
     if (!postId) {
@@ -258,6 +277,10 @@ export async function handleDeletePost(postId: string) {
   }
 }
 
+/**
+ * Handles liking/unliking a post by ID
+ * @param {string} postId - The ID of the post to like/unlike
+ */
 export async function handleLikePost(postId: string) {
   try {
     if (!postId) {
@@ -277,6 +300,11 @@ export async function handleLikePost(postId: string) {
   }
 }
 
+/**
+ * Handles viewing a post by ID with optional pagination for replies
+ * @param {string} postId - The ID of the post to view
+ * @param {string} [page] - Optional page number for replies pagination
+ */
 export async function handlePostView(postId: string, page?: string) {
   try {
     if (!postId) {

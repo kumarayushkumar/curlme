@@ -1,13 +1,24 @@
+/**
+ * API client for communicating with the curlme backend
+ */
+
 import axios from 'axios'
 import { getToken } from './config.js'
+
 export class ApiClient {
   private baseURL: string
 
   constructor() {
-    // Allow overriding API URL via env; default to local dev
     this.baseURL = process.env.CURLME_API_URL || 'http://localhost:8000'
   }
 
+  /**
+   * Makes HTTP requests to the API
+   *
+   * @param {string} endpoint - API endpoint path
+   * @param {Object} options - Request options
+   * @returns {Promise<any>} API response data
+   */
   async request(
     endpoint: string,
     options: {
@@ -15,7 +26,7 @@ export class ApiClient {
       data?: any
       requireAuth?: boolean
     } = {}
-  ) {
+  ): Promise<any> {
     const { method = 'GET', data, requireAuth = false } = options
 
     const headers: Record<string, string> = {
@@ -49,15 +60,41 @@ export class ApiClient {
     }
   }
 
-  async get(endpoint: string, requireAuth = false) {
+  /**
+   * Sends a GET request to the specified endpoint
+   *
+   * @param {string} endpoint - API endpoint path
+   * @param {boolean} requireAuth - Whether authentication is required
+   * @returns {Promise<any>} API response data
+   */
+  async get(endpoint: string, requireAuth: boolean = false): Promise<any> {
     return this.request(endpoint, { method: 'GET', requireAuth })
   }
 
-  async post(endpoint: string, data?: any, requireAuth = false) {
+  /**
+   * Sends a POST request to the specified endpoint with optional data
+   *
+   * @param {string} endpoint - API endpoint path
+   * @param {any} [data] - Optional data to send in the request body
+   * @param {boolean} requireAuth - Whether authentication is required
+   * @returns {Promise<any>} API response data
+   */
+  async post(
+    endpoint: string,
+    data?: any,
+    requireAuth: boolean = false
+  ): Promise<any> {
     return this.request(endpoint, { method: 'POST', data, requireAuth })
   }
 
-  async delete(endpoint: string, requireAuth = false) {
+  /**
+   * Sends a DELETE request to the specified endpoint
+   *
+   * @param {string} endpoint - API endpoint path
+   * @param {boolean} requireAuth - Whether authentication is required
+   * @returns {Promise<any>} API response data
+   */
+  async delete(endpoint: string, requireAuth: boolean = false): Promise<any> {
     return this.request(endpoint, { method: 'DELETE', requireAuth })
   }
 }

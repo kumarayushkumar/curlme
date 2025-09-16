@@ -1,3 +1,7 @@
+/**
+ * Handler for GitHub OAuth device flow authentication
+ */
+
 import axios from 'axios'
 import type { Request, Response } from 'express'
 
@@ -6,6 +10,9 @@ import type { GitHubDeviceTokenResponse, GitHubUser } from '../types/github.js'
 import { GITHUB_CLIENT_ID, HTTP_STATUS_CODE } from '../utils/constants.js'
 import { generateToken } from '../utils/jwt.js'
 
+/**
+ * Handler for GitHub OAuth device flow authentication
+ */
 export const loginHandler = async (req: Request, res: Response) => {
   try {
     const { device_code } = req.body

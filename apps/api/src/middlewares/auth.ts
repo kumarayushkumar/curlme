@@ -1,7 +1,18 @@
+/**
+ * Authentication middleware for JWT token validation
+ */
+
 import type { NextFunction, Request, Response } from 'express'
 import { HTTP_STATUS_CODE } from '../utils/constants.js'
 import { isTokenExpired, isTokenInvalid, verifyToken } from '../utils/jwt.js'
 
+/**
+ * Middleware to authenticate JWT tokens from authorization headers
+ *
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @param {NextFunction} next - Express next function
+ */
 export const authMiddleware = (
   req: Request,
   res: Response,

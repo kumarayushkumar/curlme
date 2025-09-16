@@ -1,17 +1,24 @@
+/**
+ * Main CLI command handler and dispatcher
+ */
+
 import { apiClient } from '../api.js'
 import { colorize, error, formatOutput } from '../output.js'
 import { handleLogin, handleLogout } from './auth.js'
 import {
-  handlePost,
-  handlePostView,
   handleDeletePost,
-  handleLikePost,
+  handleFeed,
   handleInteractiveFeed,
-  handleFeed
+  handleLikePost,
+  handlePost,
+  handlePostView
 } from './post.js'
-import { handleReply, handleDeleteReply, handleLikeReply } from './reply.js'
+import { handleDeleteReply, handleLikeReply, handleReply } from './reply.js'
 import { handleProfile } from './user.js'
 
+/**
+ * Handles the curlme info command to fetch and display welcome message
+ */
 async function handleCurlmeInfo() {
   try {
     const response = await apiClient.get('/curlme')
@@ -62,6 +69,11 @@ ${colorize('Commands:', 'bold')}
 `)
 }
 
+/**
+ * Main command handler that routes to specific command functions
+ * @param {string} command - The command to execute
+ * @param {string[]} args - Arguments for the command
+ */
 export async function handleCommand(command: string, args: string[]) {
   try {
     switch (command) {

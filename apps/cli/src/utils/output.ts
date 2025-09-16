@@ -1,5 +1,6 @@
-// Simple output utilities without external dependencies for now
-// Can be enhanced with chalk later when dependencies are installed
+/**
+ * Output formatting and colorization utilities for CLI
+ */
 
 export const colors = {
   red: '\x1b[31m',
@@ -36,7 +37,7 @@ export function log(message: string): void {
   console.log(message)
 }
 
-export function formatOutput(data: any): void {
+export function formatOutput(data: string | object): void {
   if (typeof data === 'string') {
     console.log('\n' + data + '\n')
   } else {

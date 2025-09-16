@@ -1,10 +1,36 @@
+/**
+ * Controller for retrieving single posts with replies
+ */
+
 import { prisma } from '../../config/database.js'
 
+/**
+ * Retrieves a single post with paginated replies
+ *
+ * @param {string} postId - The ID of the post to retrieve
+ * @param {number} page - Page number for replies pagination
+ * @param {number} limit - Number of replies per page
+ * @returns {Promise<{id: string, content: string, createdAt: string, likesCount: number, repliesCount: number, replies: any[], username: string, pagination: {currentPage: number, hasNextPage: boolean, totalRepliesOnPage: number, limit: number}}|null>} - Post data with replies or null if not found
+ */
 const getPostController = async (
   postId: string,
   page: number,
   limit: number
-) => {
+): Promise<{
+  id: string
+  content: string
+  createdAt: string
+  likesCount: number
+  repliesCount: number
+  replies: any[]
+  username: string
+  pagination: {
+    currentPage: number
+    hasNextPage: boolean
+    totalRepliesOnPage: number
+    limit: number
+  }
+} | null> => {
   const post = await prisma.post.findUnique({
     where: { id: postId },
     include: {

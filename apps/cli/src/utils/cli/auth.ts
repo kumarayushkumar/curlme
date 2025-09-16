@@ -1,3 +1,7 @@
+/**
+ * Authentication handlers for GitHub OAuth device flow
+ */
+
 import { exec } from 'child_process'
 import * as readline from 'readline'
 import { apiClient } from '../api.js'
@@ -11,6 +15,9 @@ import {
 } from '../config.js'
 import { colorize, error, info, success, warning } from '../output.js'
 
+/**
+ * Handles the login process using GitHub OAuth device flow
+ */
 export async function handleLogin() {
   try {
     if (isAuthenticated()) {
@@ -126,6 +133,9 @@ export async function handleLogin() {
   }
 }
 
+/**
+ * Handles the logout process by clearing stored tokens and device codes
+ */
 export function handleLogout() {
   clearToken()
   clearDeviceCode()
