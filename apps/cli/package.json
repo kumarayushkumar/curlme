@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc && chmod +x dist/index.js",
+    "dev": "tsx src/index.ts",
     "check-types": "tsc --noEmit",
     "install-global": "npm run build && npm install -g .",
     "uninstall-global": "npm uninstall -g curlme-cli"
@@ -24,9 +25,9 @@
     "url": "https://github.com/kumarayushkumar"
   },
   "license": "MIT",
-
   "dependencies": {
-    "axios": "^1.11.0"
+    "axios": "^1.11.0",
+    "dotenv": "^17.2.2"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

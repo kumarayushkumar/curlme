@@ -3,6 +3,8 @@
  */
 
 import axios from 'axios'
+import dotenv from 'dotenv'
+dotenv.config()
 import { getToken } from './config.js'
 
 export class ApiClient {

@@ -12,8 +12,6 @@ services:
     restart: always
     env_file:
       - .env
-    ports:
-      - '5432:5432'
     volumes:
       - database-data:/data/db
     networks:
@@ -35,15 +33,13 @@ services:
       - .env
     environment:
       - NODE_ENV=production
-    ports:
-      - '8000:8000'
     depends_on:
       database:
         condition: service_healthy
       redis:
         condition: service_healthy
     networks:
-      # - curlme-network
+      - curlme-network
       - database-network
 
   redis:
@@ -56,35 +52,33 @@ services:
     image: redis:latest
     container_name: curlme-redis
     restart: always
-    ports:
-      - "6379:6379"
     networks:
       - database-network
 
-  # caddy:
-  #   depends_on:
-  #     api:
-  #       condition: service_started
-  #   image: caddy:latest
-  #   container_name: curlme-caddy
-  #   restart: always
-  #   ports:
-  #     - '80:80'
-  #     - '443:443'
-  #   volumes:
-  #     - ./Caddyfile:/etc/caddy/Caddyfile
-  #     - caddy-data:/data
-  #     - caddy-config:/config
-  #   networks:
-  #     - curlme-network
-  #   extra_hosts:
-  #     - 'host.docker.internal:host-gateway'
+  caddy:
+    depends_on:
+      api:
+        condition: service_started
+    image: caddy:latest
+    container_name: curlme-caddy
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - curlme-network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
 
 volumes:
   database-data:
-  # caddy-data:
-  # caddy-config:
+  caddy-data:
+  caddy-config:
 
 networks:
-  # curlme-network:
+  curlme-network:
   database-network:
