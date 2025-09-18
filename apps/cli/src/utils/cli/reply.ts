@@ -25,7 +25,7 @@ export async function handleReply(postId: string, content: string) {
     }
 
     const response = await apiClient.post(
-      `/create-reply/${postId}`,
+      `/api/create-reply/${postId}`,
       { content },
       true
     )
@@ -47,7 +47,10 @@ export async function handleDeleteReply(replyId: string) {
       return
     }
 
-    const response = await apiClient.delete(`/delete-reply/${replyId}`, true)
+    const response = await apiClient.delete(
+      `/api/delete-reply/${replyId}`,
+      true
+    )
     formatOutput(response)
   } catch (err: any) {
     error(`Failed to delete reply: ${err.message}`)
@@ -67,7 +70,7 @@ export async function handleLikeReply(replyId: string) {
     }
 
     const response = await apiClient.post(
-      `/toggle-like-reply/${replyId}`,
+      `/api/toggle-like-reply/${replyId}`,
       {},
       true
     )

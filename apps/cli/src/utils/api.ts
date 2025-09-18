@@ -4,14 +4,17 @@
 
 import axios from 'axios'
 import dotenv from 'dotenv'
-dotenv.config()
 import { getToken } from './config.js'
+dotenv.config()
 
 export class ApiClient {
   private baseURL: string
 
   constructor() {
-    this.baseURL = process.env.CURLME_API_URL || 'http://localhost:8000'
+    this.baseURL =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:8000'
+        : 'http://167.71.237.89'
   }
 
   /**

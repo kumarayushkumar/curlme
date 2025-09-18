@@ -14,9 +14,10 @@ export async function handleProfile(username?: string) {
     let endpoint = '/profile'
 
     if (username) {
-      endpoint = `/profile/${username}`
+      endpoint = `/api/profile/${username}`
       info(`Fetching profile for @${username}...`)
     } else {
+      endpoint = '/api/profile'
       info('Fetching your profile...')
     }
 

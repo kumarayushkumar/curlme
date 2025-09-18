@@ -44,6 +44,8 @@ const morganMiddleware = morgan(
 const serverConfig = () => {
   console.log('server configuration started')
 
+  app.set('trust proxy', true)
+
   app.use(
     helmet({
       contentSecurityPolicy: false, // Disable CSP for API

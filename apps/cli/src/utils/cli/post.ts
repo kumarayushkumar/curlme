@@ -18,7 +18,7 @@ export async function handlePost(content: string) {
       return
     }
 
-    const response = await apiClient.post('/create-post', { content }, true)
+    const response = await apiClient.post('/api/create-post', { content }, true)
     formatOutput(response)
   } catch (err: any) {
     error(`Failed to create post: ${err.message}`)
@@ -39,7 +39,7 @@ export async function handleFeed(page?: string) {
     }
 
     const queryParams = pageNum > 1 ? `?page=${pageNum}` : ''
-    const response = await apiClient.get(`/feed${queryParams}`, true)
+    const response = await apiClient.get(`/api/feed${queryParams}`, true)
 
     formatOutput(response)
 
@@ -88,7 +88,7 @@ export async function handleInteractiveFeed() {
       console.log(colorize('📡 Loading feed...', 'cyan'))
 
       const queryParams = page > 1 ? `?page=${page}` : ''
-      const response = await apiClient.get(`/feed${queryParams}`, true)
+      const response = await apiClient.get(`/api/feed${queryParams}`, true)
 
       // Clear screen again to remove loading message
       console.clear()
@@ -270,7 +270,7 @@ export async function handleDeletePost(postId: string) {
       return
     }
 
-    const response = await apiClient.delete(`/delete-post/${postId}`, true)
+    const response = await apiClient.delete(`/api/delete-post/${postId}`, true)
     formatOutput(response)
   } catch (err: any) {
     error(`Failed to delete post: ${err.message}`)
@@ -290,7 +290,7 @@ export async function handleLikePost(postId: string) {
     }
 
     const response = await apiClient.post(
-      `/toggle-like-post/${postId}`,
+      `/api/toggle-like-post/${postId}`,
       {},
       true
     )
@@ -322,7 +322,7 @@ export async function handlePostView(postId: string, page?: string) {
 
     const queryParams = pageNum > 1 ? `?page=${pageNum}` : ''
     const response = await apiClient.get(
-      `/get-post/${postId}${queryParams}`,
+      `/api/get-post/${postId}${queryParams}`,
       true
     )
 

@@ -17,14 +17,14 @@ import { handleDeleteReply, handleLikeReply, handleReply } from './reply.js'
 import { handleProfile } from './user.js'
 
 /**
- * Handles the curlme info command to fetch and display welcome message
+ * Handles the curlme feedback command to fetch and display feedback message
  */
-async function handleCurlmeInfo() {
+async function handleFeedback() {
   try {
-    const response = await apiClient.get('/curlme')
+    const response = await apiClient.get('/feedback')
     formatOutput(response)
   } catch (err: any) {
-    error(`Failed to get curlme info: ${err.message}`)
+    error(`Failed to get: ${err.message}`)
   }
 }
 
@@ -60,8 +60,7 @@ ${colorize('Commands:', 'bold')}
   feed [page]                Show specific page (static mode)
   feed -i                    Show feed (interactive mode with ↑↓ navigation)
 
-  ${colorize('Info:', 'yellow')}
-  info                       Show curlme welcome message
+  ${colorize('Feedback:', 'yellow')}
   feedback                   Contact support or report issues
 
   ${colorize('Help:', 'yellow')}
@@ -119,9 +118,8 @@ export async function handleCommand(command: string, args: string[]) {
           await handleFeed(args[0])
         }
         break
-      case 'info':
       case 'feedback':
-        await handleCurlmeInfo()
+        await handleFeedback()
         break
       case 'help':
       default:

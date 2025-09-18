@@ -29,7 +29,7 @@ export async function handleLogin() {
     if (existingDeviceCode) {
       info('Completing GitHub authentication...')
       try {
-        const response = await apiClient.post('/login', {
+        const response = await apiClient.post('/api/login', {
           device_code: existingDeviceCode
         })
         if (response?.success && response?.data?.token) {
@@ -53,7 +53,7 @@ export async function handleLogin() {
     }
 
     info('Starting GitHub authentication...')
-    const start = await apiClient.post('/login')
+    const start = await apiClient.post('/api/login')
     if (start?.success && start?.data?.device_code) {
       const newDeviceCode = start.data.device_code
       const userCode = start.data.user_code
@@ -95,7 +95,7 @@ export async function handleLogin() {
 
       if (answer === 'y' || answer === 'yes') {
         try {
-          const finish = await apiClient.post('/login', {
+          const finish = await apiClient.post('/api/login', {
             device_code: newDeviceCode
           })
           if (finish?.success && finish?.data?.token) {

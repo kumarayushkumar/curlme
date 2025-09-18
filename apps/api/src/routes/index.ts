@@ -3,11 +3,11 @@ import user from './user.js'
 
 const ROUTER = [
   {
-    path: '/curlme',
+    path: '/',
     router: curlme
   },
   {
-    path: '/',
+    path: '/api',
     router: user
   }
 ]
