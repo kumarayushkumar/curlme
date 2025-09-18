@@ -29,16 +29,14 @@ const getFeedController = async (
   let cachedPosts = await getPostsFromCache()
 
   if (cachedPosts.length === 0) {
-    logger.info(`${__filename} | cache miss, warming up cache`)
+    logger.info(`cache miss, warming up cache`)
     await warmFeedCache()
     cachedPosts = await getPostsFromCache()
   }
 
   // If cache is still empty or pagination exceeds cache, fetch from DB
   if (cachedPosts.length === 0 || (page - 1) * limit >= cachedPosts.length) {
-    logger.info(
-      `${__filename} | cache miss or pagination exceeds cache, fetching from db`
-    )
+    logger.info(`cache miss or pagination exceeds cache, fetching from db`)
     const posts = await prisma.post.findMany({
       include: {
         user: {

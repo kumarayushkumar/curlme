@@ -1,4 +1,0 @@
-curlme.dev, api.curlme.dev {
-  encode gzip
-  reverse_proxy curlme-api:8000
-}

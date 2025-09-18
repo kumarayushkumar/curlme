@@ -59,14 +59,15 @@ services:
     depends_on:
       api:
         condition: service_started
-    image: caddy:latest
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     container_name: curlme-caddy
     restart: always
     ports:
       - '80:80'
       - '443:443'
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy-data:/data
       - caddy-config:/config
     networks:

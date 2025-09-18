@@ -1,0 +1,18 @@
+curlme.dev, api.curlme.dev {
+  encode gzip
+  reverse_proxy curlme-api:8000
+
+  rate_limit {
+    zone api_limit {
+      key {remote_host}
+      events 100
+      window 1m
+    }
+
+    zone burst_limit {
+      key {remote_host}
+      events 10
+      window 1s
+    }
+  }
+}

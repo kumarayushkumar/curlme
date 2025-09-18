@@ -32,9 +32,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
       profile = await getUserController(currentUserId)
 
       if (!profile) {
-        logger.error(
-          `${__filename} | cannot find own profile for userId: ${currentUserId}`
-        )
+        logger.error(`cannot find own profile for userId: ${currentUserId}`)
         return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
           success: false,
           error: 'not_found',

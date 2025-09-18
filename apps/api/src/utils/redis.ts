@@ -24,7 +24,7 @@ export const cachePost = async (post: CachedPost) => {
 
     await redisConnection.set('feed', JSON.stringify(posts), 'EX', CACHE_TTL)
   } catch (error) {
-    logger.error(`${__filename} | ${error}`)
+    logger.error(`${error}`)
   }
 }
 
@@ -38,7 +38,7 @@ export const getPostsFromCache = async (): Promise<CachedPost[]> => {
     const cachedPosts = await redisConnection.get('feed')
     return cachedPosts ? JSON.parse(cachedPosts) : []
   } catch (error) {
-    logger.error(`${__filename} | ${error}`)
+    logger.error(`${error}`)
     return []
   }
 }
@@ -52,7 +52,7 @@ export const setPostsInCache = async (posts: CachedPost[]) => {
   try {
     await redisConnection.set('feed', JSON.stringify(posts), 'EX', CACHE_TTL)
   } catch (error) {
-    logger.error(`${__filename} | ${error}`)
+    logger.error(`${error}`)
   }
 }
 
@@ -79,7 +79,7 @@ export const warmFeedCache = async () => {
       await redisConnection.set('feed', JSON.stringify(posts), 'EX', CACHE_TTL)
     }
   } catch (error) {
-    logger.error(`${__filename} | failed to warm cache: ${error}`)
+    logger.error(`failed to warm cache: ${error}`)
   }
 }
 
@@ -115,8 +115,8 @@ export const updatePostInCache = async (
     }
 
     await setPostsInCache(cachedPosts)
-    logger.info(`${__filename} | updated post ${postId} in cache`)
+    logger.info(`updated post ${postId} in cache`)
   } catch (error) {
-    logger.error(`${__filename} | failed to update post in cache: ${error}`)
+    logger.error(`failed to update post in cache: ${error}`)
   }
 }

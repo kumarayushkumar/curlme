@@ -3,9 +3,7 @@
  */
 
 import axios from 'axios'
-import dotenv from 'dotenv'
 import { getToken } from './config.js'
-dotenv.config()
 
 export class ApiClient {
   private baseURL: string
@@ -14,7 +12,10 @@ export class ApiClient {
     this.baseURL =
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:8000'
-        : 'http://167.71.237.89'
+        : 'http://api.curlme.dev'
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`API Client initialized with baseURL: ${this.baseURL}`)
+    }
   }
 
   /**

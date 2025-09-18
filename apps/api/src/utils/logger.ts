@@ -1,10 +1,10 @@
 import fs from 'fs'
 import path from 'path'
-import { createLogger, format } from 'winston'
+import { createLogger, format, transports } from 'winston'
 import DailyRotateFile from 'winston-daily-rotate-file'
 import { syslog } from 'winston/lib/winston/config/index.js'
 
-const { combine, timestamp, printf, errors, colorize } = format
+const { combine, timestamp, printf, errors } = format
 
 const logDir = process.env.LOG_DIR ?? 'logs'
 const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss'
@@ -54,24 +54,27 @@ const logger = createLogger({
   format: combine(
     errors({ stack: true }),
     timestamp({ format: dateTimeFormat }),
-    logFormat,
-    colorize({ all: true })
+    logFormat
   ),
   transports: [
     // Rotate error and info logs daily, keep for 14 days
     logRotate('error', '14d', errorFilter()),
-    logRotate('info', '14d', infoFilter())
+    logRotate('info', '14d', infoFilter()),
+    new transports.Console({
+      level: 'error',
+      format: combine(
+        format.colorize(),
+        timestamp({ format: dateTimeFormat }),
+        logFormat
+      )
+    })
   ]
 })
 
 const logResReq = createLogger({
   levels: syslog.levels,
   level: 'info',
-  format: combine(
-    timestamp({ format: dateTimeFormat }),
-    logFormat,
-    colorize({ all: true })
-  ),
+  format: combine(timestamp({ format: dateTimeFormat }), logFormat),
   transports: [logRotate('res-req', '14d')]
 })
 

@@ -36,9 +36,7 @@ const deletePostController = async (
       )
     }
   } catch (error) {
-    logger.error(
-      `${__filename} | failed to invalidate cache after post deletion: ${error}`
-    )
+    logger.error(`failed to invalidate cache after post deletion: ${error}`)
   }
 
   return { id: postId }

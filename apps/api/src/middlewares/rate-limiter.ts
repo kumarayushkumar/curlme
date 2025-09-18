@@ -16,7 +16,7 @@ export const limiter = rateLimit({
   legacyHeaders: false,
   handler: (req, res) => {
     logger.error(
-      `${__filename} | too many requests made to the request: ${req.method} | ${req.originalUrl || req.url || 'unknown path'} | from: ${req?.user?.userId}`
+      `too many requests made to the request: ${req.method} | ${req.originalUrl || req.url || 'unknown path'} | from: ${req.ip} | userId: ${req?.user?.userId}`
     )
     res.status(HTTP_STATUS_CODE.TOO_MANY_REQUESTS).json({
       success: false,

@@ -43,7 +43,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      # - curlme-network
+      - curlme-network
       - database-network
 
   redis:
@@ -61,30 +61,30 @@ services:
     networks:
       - database-network
 
-  # caddy:
-  #   depends_on:
-  #     api:
-  #       condition: service_started
-  #   image: caddy:latest
-  #   container_name: curlme-caddy
-  #   restart: always
-  #   ports:
-  #     - '80:80'
-  #     - '443:443'
-  #   volumes:
-  #     - ./Caddyfile:/etc/caddy/Caddyfile
-  #     - caddy-data:/data
-  #     - caddy-config:/config
-  #   networks:
-  #     - curlme-network
-  #   extra_hosts:
-  #     - 'host.docker.internal:host-gateway'
+  caddy:
+    depends_on:
+      api:
+        condition: service_started
+    image: caddy:latest
+    container_name: curlme-caddy
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - curlme-network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
 
 volumes:
   database-data:
-  # caddy-data:
-  # caddy-config:
+  caddy-data:
+  caddy-config:
 
 networks:
-  # curlme-network:
+  curlme-network:
   database-network:

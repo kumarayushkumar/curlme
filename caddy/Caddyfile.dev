@@ -1,0 +1,7 @@
+{
+  local_certs
+}
+
+curlme.localhost {
+  reverse_proxy curlme-api:8000
+}

@@ -44,7 +44,7 @@ const morganMiddleware = morgan(
 const serverConfig = () => {
   console.log('server configuration started')
 
-  app.set('trust proxy', true)
+  app.set('trust proxy', 1)
 
   app.use(
     helmet({
