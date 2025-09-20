@@ -80,7 +80,7 @@ export async function handleLogin(): Promise<void> {
         }
       )
     })
-    console.log('\n')
+    console.log()
     if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
       const finish = await apiClient.post('/api/login', {
         device_code: newDeviceCode

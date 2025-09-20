@@ -41,32 +41,32 @@ ${colorize('Usage:', 'bold')}
 
 ${colorize('Commands:', 'bold')}
   ${colorize('Authentication:', 'yellow')}
-  login                      Authenticate with GitHub
-  logout                     Clear authentication token
+  login                        Authenticate with GitHub
+  logout                       Clear authentication token
 
   ${colorize('Profile:', 'yellow')}
-  profile                    Show your profile
-  profile <username>         Show another user's profile
+  profile                      Show your profile
+  profile <username>           Show another user's profile
 
   ${colorize('Posts:', 'yellow')}
-  post <content>             Create a new post
-  post-view <post-id> [page] View a post and its replies (with pagination)
-  post-delete <post-id>      Delete your post
-  post-like <post-id>        Like/unlike a post
+  post "<content>"             Create a new post
+  post-view <post-id> [page]   View a post and its replies (with pagination)
+  post-delete <post-id>        Delete your post
+  post-like <post-id>          Like/unlike a post
 
   ${colorize('Replies:', 'yellow')}
-  reply <post-id> <content>  Reply to a post
-  reply-delete <reply-id>    Delete your reply
-  reply-like <reply-id>      Like/unlike a reply
+  reply <post-id> "<content>"  Reply to a post
+  reply-delete <reply-id>      Delete your reply
+  reply-like <reply-id>        Like/unlike a reply
 
   ${colorize('Feed:', 'yellow')}
-  feed                       Show feed (interactive mode with ↑↓ navigation)
+  feed                         Show feed (interactive mode with ↑↓ navigation)
 
   ${colorize('Feedback:', 'yellow')}
-  feedback                   Contact support or report issues
+  feedback                     Contact support or report issues
 
   ${colorize('Help:', 'yellow')}
-  help                       Show this help message
+  help                         Show this help message
 `)
 }
 
