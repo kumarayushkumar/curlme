@@ -3,12 +3,11 @@
  */
 
 import { apiClient } from '../api.js'
-import { colorize, error, formatOutput } from '../output.js'
+import { colorize, displayAsText } from '../output.js'
 import { handleLogin, handleLogout } from './auth.js'
+import { handleFeed } from './feed.js'
 import {
   handleDeletePost,
-  handleFeed,
-  handleInteractiveFeed,
   handleLikePost,
   handlePost,
   handlePostView
@@ -18,19 +17,24 @@ import { handleProfile } from './user.js'
 
 /**
  * Handles the curlme feedback command to fetch and display feedback message
+ *
+ * @returns {Promise<void>}
  */
-async function handleFeedback() {
-  try {
-    const response = await apiClient.get('/feedback')
-    formatOutput(response)
-  } catch (err: any) {
-    error(`Failed to get: ${err.message}`)
+async function handleFeedback(): Promise<void> {
+  const response = await apiClient.get('/feedback')
+  if (response) {
+    displayAsText(response)
   }
 }
 
-function showHelp() {
+/**
+ * Displays help information for the CLI
+ *
+ * @returns {void}
+ */
+function showHelp(): void {
   console.log(`
-${colorize('curlme', 'cyan')} - Social media for developers
+${colorize('Curlme', 'highlight')} - Social media for developers
 
 ${colorize('Usage:', 'bold')}
   curlme <command> [options]
@@ -56,12 +60,14 @@ ${colorize('Commands:', 'bold')}
   reply-like <reply-id>      Like/unlike a reply
 
   ${colorize('Feed:', 'yellow')}
-  feed                       Show feed (static mode, first page)
-  feed [page]                Show specific page (static mode)
-  feed -i                    Show feed (interactive mode with ↑↓ navigation)
+  feed                       Show feed (interactive mode with ↑↓ navigation)
 
   ${colorize('Feedback:', 'yellow')}
   feedback                   Contact support or report issues
+
+  ${colorize('Development:', 'yellow')}
+  colors                     Preview all available CLI colors
+  demo                       Demonstrate JSON-to-text conversion
 
   ${colorize('Help:', 'yellow')}
   help                       Show this help message
@@ -70,63 +76,60 @@ ${colorize('Commands:', 'bold')}
 
 /**
  * Main command handler that routes to specific command functions
+ *
  * @param {string} command - The command to execute
  * @param {string[]} args - Arguments for the command
+ * @return {Promise<void>}
  */
-export async function handleCommand(command: string, args: string[]) {
-  try {
-    switch (command) {
-      case 'login':
-        await handleLogin()
-        break
-      case 'logout':
-        handleLogout()
-        break
-      case 'profile':
-        await handleProfile(args[0])
-        break
-      case 'post': {
-        const content = args.join(' ').trim()
-        await handlePost(content)
-        break
-      }
-      case 'post-view':
-        await handlePostView(args[0], args[1])
-        break
-      case 'post-delete':
-        await handleDeletePost(args[0])
-        break
-      case 'post-like':
-        await handleLikePost(args[0])
-        break
-      case 'reply': {
-        const postId = args[0]
-        const content = args.slice(1).join(' ').trim()
-        await handleReply(postId, content)
-        break
-      }
-      case 'reply-delete':
-        await handleDeleteReply(args[0])
-        break
-      case 'reply-like':
-        await handleLikeReply(args[0])
-        break
-      case 'feed':
-        if (args[0] === '-i') {
-          await handleInteractiveFeed()
-        } else {
-          await handleFeed(args[0])
-        }
-        break
-      case 'feedback':
-        await handleFeedback()
-        break
-      case 'help':
-      default:
-        showHelp()
-        break
+export async function handleCommand(
+  command: string,
+  args: string[]
+): Promise<void> {
+  switch (command) {
+    case 'login':
+      await handleLogin()
+      break
+    case 'logout':
+      handleLogout()
+      break
+    case 'profile':
+      await handleProfile(args[0])
+      break
+    case 'post': {
+      const content = args.join(' ').trim()
+      await handlePost(content)
+      break
     }
-  } catch (err: any) {
-    error(err?.message || 'Command failed')
+    case 'post-view':
+      await handlePostView(args[0], args[1])
+      break
+    case 'post-delete':
+      await handleDeletePost(args[0])
+      break
+    case 'post-like':
+      await handleLikePost(args[0])
+      break
+    case 'reply': {
+      const postId = args[0]
+      const content = args.slice(1).join(' ').trim()
+      await handleReply(postId, content)
+      break
+    }
+    case 'reply-delete':
+      await handleDeleteReply(args[0])
+      break
+    case 'reply-like':
+      await handleLikeReply(args[0])
+      break
+    case 'feed':
+      await handleFeed()
+      break
+    case 'feedback':
+      await handleFeedback()
+      break
+    case 'help':
+    default:
+      showHelp()
+      break
   }
 }

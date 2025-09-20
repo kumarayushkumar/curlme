@@ -14,149 +14,109 @@ import { HTTP_STATUS_CODE, POST_LIMIT } from '../utils/constants.js'
  * Handler for retrieving paginated feed of posts
  */
 export const getFeedHandler = async (req: Request, res: Response) => {
-  try {
-    const page = parseInt(req.query.page as string) || 1
-    const limit = parseInt(req.query.limit as string) || POST_LIMIT
+  const page = parseInt(req.query.page as string) || 1
+  const limit = parseInt(req.query.limit as string) || POST_LIMIT
 
-    const feed = await getFeedController(page, limit)
+  const feed = await getFeedController(page, limit)
 
-    return res.status(HTTP_STATUS_CODE.OK).json({
-      success: true,
-      data: feed,
-      message: 'feed fetched successfully'
-    })
-  } catch (error) {
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      error: 'internal_server_error',
-      message: 'an error occurred while fetching feed'
-    })
-  }
+  return res.status(HTTP_STATUS_CODE.OK).json({
+    success: true,
+    data: { feed },
+    message: 'feed fetched successfully'
+  })
 }
 
 /**
  * Handler for retrieving a single post with replies
  */
 export const getPostHandler = async (req: Request, res: Response) => {
-  try {
-    const postId = req.params.postId as string
-    const page = parseInt(req.query.page as string) || 1
-    const limit = parseInt(req.query.limit as string) || POST_LIMIT
+  const postId = req.params.postId as string
+  const page = parseInt(req.query.page as string) || 1
+  const limit = parseInt(req.query.limit as string) || POST_LIMIT
 
-    const post = await getPostController(postId, page, limit)
-    if (!post) {
-      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-        success: false,
-        error: 'not_found',
-        message: 'the requested post does not exist'
-      })
-    }
-
-    return res.status(HTTP_STATUS_CODE.OK).json({
-      success: true,
-      data: post,
-      message: 'post fetched successfully'
-    })
-  } catch (error) {
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+  const post = await getPostController(postId, page, limit)
+  if (!post) {
+    return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
       success: false,
-      error: 'internal_server_error',
-      message: 'an error occurred while fetching post'
+      error: 'not_found',
+      message: 'the requested post does not exist'
     })
   }
+
+  return res.status(HTTP_STATUS_CODE.OK).json({
+    success: true,
+    data: { post },
+    message: 'post fetched successfully'
+  })
 }
 
 /**
  * Handler for creating a new post
  */
 export const createPostHandler = async (req: Request, res: Response) => {
-  try {
-    const userId = req.user!.userId
-    const content = req.body.content
+  const userId = req.user!.userId
+  const content = req.body.content
 
-    const post = await createPostController(content, userId)
-    if (!post) {
-      return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        error: 'internal_server_error',
-        message: 'an error occurred while creating post'
-      })
-    }
-
-    return res.status(HTTP_STATUS_CODE.CREATED).json({
-      success: true,
-      data: post,
-      message: 'post created successfully'
-    })
-  } catch (error) {
+  const post = await createPostController(content, userId)
+  if (!post) {
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
       error: 'internal_server_error',
       message: 'an error occurred while creating post'
     })
   }
+
+  return res.status(HTTP_STATUS_CODE.CREATED).json({
+    success: true,
+    data: { post },
+    message: 'post created successfully'
+  })
 }
 
 /**
  * Handler for deleting a post
  */
 export const deletePostHandler = async (req: Request, res: Response) => {
-  try {
-    const postId = req.params.postId as string
-    const userId = req.user!.userId
+  const postId = req.params.postId as string
+  const userId = req.user!.userId
 
-    const post = await deletePostController(postId, userId)
+  const post = await deletePostController(postId, userId)
 
-    if (!post) {
-      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-        success: false,
-        error: 'not_found',
-        message: 'the post you are trying to delete does not exist'
-      })
-    }
-
-    return res.status(HTTP_STATUS_CODE.OK).json({
-      success: true,
-      data: post,
-      message: 'post deleted successfully'
-    })
-  } catch (error) {
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+  if (!post) {
+    return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
       success: false,
-      error: 'internal_server_error',
-      message: 'an error occurred while deleting post'
+      error: 'not_found',
+      message: 'the post you are trying to delete does not exist'
     })
   }
+
+  return res.status(HTTP_STATUS_CODE.OK).json({
+    success: true,
+    data: { post },
+    message: 'post deleted successfully'
+  })
 }
 
 /**
  * Handler for toggling like/unlike on a post
  */
 export const toggleLikePostHandler = async (req: Request, res: Response) => {
-  try {
-    const postId = req.params.postId as string
-    const userId = req.user!.userId
+  const postId = req.params.postId as string
+  const userId = req.user!.userId
 
-    const result = await toggleLikePostController(postId, userId)
+  const result = await toggleLikePostController(postId, userId)
 
-    if (!result) {
-      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-        success: false,
-        error: 'not_found',
-        message: 'the post you are trying to like/unlike does not exist'
-      })
-    }
-
-    return res.status(HTTP_STATUS_CODE.OK).json({
-      success: true,
-      data: {},
-      message: result.message
-    })
-  } catch (error) {
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
+  if (!result) {
+    return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
       success: false,
-      error: 'internal_server_error',
-      message: 'an error occurred while toggling post like'
+      error: 'not_found',
+      message: 'the post you are trying to like/unlike does not exist'
     })
   }
+
+  return res.status(HTTP_STATUS_CODE.OK).json({
+    success: true,
+    data: {},
+    message: result.message
+  })
 }

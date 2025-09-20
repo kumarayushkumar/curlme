@@ -42,7 +42,7 @@ export const HTTP_STATUS_CODE = {
   GATEWAY_TIMEOUT: 504
 } as const
 
-export const VERSION = '1.0.0'
+export const VERSION = '2'
 
 export const JWT_EXPIRE = '30d'
 

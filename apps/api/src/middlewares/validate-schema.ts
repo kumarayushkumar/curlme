@@ -20,13 +20,7 @@ export const validateSchema = (
 ) => {
   return (req: Request, res: Response, next: NextFunction) => {
     try {
-      const parsedData = schemas.parse(req[type])
-      req[type] = {
-        ...req[type],
-        ...(typeof parsedData === 'object' && parsedData !== null
-          ? parsedData
-          : {})
-      }
+      schemas.parse(req[type])
       next()
     } catch (error: any) {
       res.status(HTTP_STATUS_CODE.BAD_REQUEST).json({

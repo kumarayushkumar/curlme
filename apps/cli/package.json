@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc && chmod +x dist/index.js",
-    "dev": "tsx src/index.ts",
+    "dev": "NODE_ENV=development tsx watch src/index.ts",
     "check-types": "tsc --noEmit",
     "install-global": "npm run build && npm install -g .",
     "uninstall-global": "npm uninstall -g curlme-cli"
