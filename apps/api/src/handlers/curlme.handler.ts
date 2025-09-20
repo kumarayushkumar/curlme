@@ -10,7 +10,7 @@ import { HTTP_STATUS_CODE } from '../utils/constants.js'
  */
 export const landingHandler = async (_req: Request, res: Response) => {
   const message = [
-    'npm i -g curlme',
+    'sudo npm i -g curlme',
     'visit https://github.com/kumarayushkumar/curlme',
     `cli-version: 1.0.2`
   ]

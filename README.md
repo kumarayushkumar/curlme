@@ -44,7 +44,7 @@ curl -X POST https://your-app.herokuapp.com/toggle-like-post/POST_ID \
 
 ```bash
 # Install globally
-npm install -g curlme-cli
+sudo npm install -g curlme
 
 # Get started
 curlme --help
