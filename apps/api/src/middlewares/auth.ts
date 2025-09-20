@@ -24,7 +24,7 @@ export const authMiddleware = (
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
         success: false,
-        error: 'authentication required',
+        error: 'authentication_required',
         message: 'please provide a valid jwt token in authorization header'
       })
     }
@@ -34,7 +34,7 @@ export const authMiddleware = (
     if (!token) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
         success: false,
-        error: 'authentication required',
+        error: 'authentication_required',
         message: 'please provide a valid jwt token in authorization header'
       })
     }
@@ -47,7 +47,7 @@ export const authMiddleware = (
     if (isTokenExpired(error)) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
         success: false,
-        error: 'token expired',
+        error: 'token_expired',
         message: 'your session has expired. please login again.'
       })
     }
@@ -55,15 +55,15 @@ export const authMiddleware = (
     if (isTokenInvalid(error)) {
       return res.status(HTTP_STATUS_CODE.UNAUTHORIZED).json({
         success: false,
-        error: 'invalid token',
+        error: 'invalid_token',
         message: 'the provided jwt token is invalid'
       })
     }
 
     return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
       success: false,
-      error: 'authentication error',
-      message: 'An error occurred during authentication'
+      error: 'authentication_error',
+      message: 'an error occurred during authentication'
     })
   }
 }

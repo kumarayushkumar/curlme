@@ -20,7 +20,7 @@ export const limiter = rateLimit({
     )
     res.status(HTTP_STATUS_CODE.TOO_MANY_REQUESTS).json({
       success: false,
-      error: 'too many requests',
+      error: 'too_many_requests',
       message: 'slow down, take it easy'
     })
   }

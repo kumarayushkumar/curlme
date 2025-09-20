@@ -30,8 +30,8 @@ const errorHandler = (
 
   return res.status(err.status || HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
     success: false,
-    error: 'Internal Server Error',
-    message: isDevelopment ? err.message : 'An unexpected error occurred',
+    error: 'internal_server_error',
+    message: isDevelopment ? err.message : 'an unexpected error occurred',
     ...(isDevelopment && { stack: err.stack })
   })
 }
