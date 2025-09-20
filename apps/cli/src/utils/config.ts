@@ -6,7 +6,9 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-const CONFIG_DIR = path.join(os.homedir(), '.curlme')
+const FOLDER_NAME =
+  process.env.NODE_ENV === 'development' ? '.curlme-dev' : '.curlme'
+const CONFIG_DIR = path.join(os.homedir(), FOLDER_NAME)
 const TOKEN_FILE = path.join(CONFIG_DIR, 'token')
 const DEVICE_CODE_FILE = path.join(CONFIG_DIR, 'device_code')
 
