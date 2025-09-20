@@ -8,14 +8,14 @@ import deletePostController from '../controllers/post/delete-post.controller.js'
 import getFeedController from '../controllers/post/get-feed.controller.js'
 import getPostController from '../controllers/post/get-post.controller.js'
 import toggleLikePostController from '../controllers/post/toggle-like-post.controller.js'
-import { HTTP_STATUS_CODE, POST_LIMIT } from '../utils/constants.js'
+import { FEED_LIMIT, HTTP_STATUS_CODE, POST_LIMIT } from '../utils/constants.js'
 
 /**
  * Handler for retrieving paginated feed of posts
  */
 export const getFeedHandler = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1
-  const limit = parseInt(req.query.limit as string) || POST_LIMIT
+  const limit = parseInt(req.query.limit as string) || FEED_LIMIT
 
   const feed = await getFeedController(page, limit)
 
