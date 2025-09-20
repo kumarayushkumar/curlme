@@ -65,10 +65,6 @@ ${colorize('Commands:', 'bold')}
   ${colorize('Feedback:', 'yellow')}
   feedback                   Contact support or report issues
 
-  ${colorize('Development:', 'yellow')}
-  colors                     Preview all available CLI colors
-  demo                       Demonstrate JSON-to-text conversion
-
   ${colorize('Help:', 'yellow')}
   help                       Show this help message
 `)

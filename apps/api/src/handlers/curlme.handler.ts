@@ -11,13 +11,12 @@ import { HTTP_STATUS_CODE } from '../utils/constants.js'
 export const landingHandler = async (_req: Request, res: Response) => {
   const message = [
     'npm i -g curlme',
-    'visit https://github.com/kumarayushkumar/curlme'
+    'visit https://github.com/kumarayushkumar/curlme',
+    `cli-version: 1.0.1`
   ]
   return res.status(HTTP_STATUS_CODE.OK).json({
     success: true,
-    data: {
-      message
-    },
+    data: { message },
     message: 'Hello from Curlme! :)'
   })
 }

@@ -5,7 +5,7 @@ A CLI tool for developers to interact with Curlme services from the terminal.
 ## Installation
 
 ```bash
-npm install -g curlme
+sudo npm install -g curlme
 ```
 
 ## Usage

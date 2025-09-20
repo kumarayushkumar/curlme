@@ -72,7 +72,7 @@ export function highlight(message: string): void {
  * @return {string} - Formatted text representation of the data
  */
 export function jsonToText(data: any, indent: number = 0): string {
-  const indentStr = '  '.repeat(indent)
+  const indentStr = ' '.repeat(indent)
   let output = ''
 
   if (data === null || data === undefined) {

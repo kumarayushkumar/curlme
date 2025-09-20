@@ -6,7 +6,7 @@ import http from 'http'
 import morgan from 'morgan'
 import errorHandler from './middlewares/handle-error.js'
 import ROUTER from './routes/index.js'
-import { HTTP_STATUS_CODE, VERSION } from './utils/constants.js'
+import { HTTP_STATUS_CODE } from './utils/constants.js'
 import { logger, logResReq } from './utils/logger.js'
 
 const app = express()
@@ -85,8 +85,7 @@ const serverConfig = () => {
       success: true,
       data: {
         timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        version: VERSION
+        uptime: process.uptime()
       },
       message: 'curlme server is running'
     })
