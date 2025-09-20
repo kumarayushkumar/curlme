@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/kumarayushkumar/curlme#readme
+    about: Read the project documentation and setup guides
+  - name: Twitter
+    url: https://x.com/ayushkumarkeirn
+    about: Follow the project updates and connect with the maintainer
