@@ -3,8 +3,7 @@
  */
 
 import axios from 'axios'
-import type { Request, Response } from 'express'
-
+import type { NextFunction, Request, Response } from 'express'
 import { prisma } from '../config/database.js'
 import type { GitHubDeviceTokenResponse, GitHubUser } from '../types/github.js'
 import { GITHUB_CLIENT_ID, HTTP_STATUS_CODE } from '../utils/constants.js'
@@ -13,7 +12,11 @@ import { generateToken } from '../utils/jwt.js'
 /**
  * Handler for GitHub OAuth device flow authentication
  */
-export const loginHandler = async (req: Request, res: Response) => {
+export const loginHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { device_code } = req.body
 
@@ -135,11 +138,6 @@ export const loginHandler = async (req: Request, res: Response) => {
         message: 'Too many requests, please wait before trying again'
       })
     }
-
-    return res.status(HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR).json({
-      success: false,
-      error: 'internal_server_error',
-      message: 'an error occurred during authentication'
-    })
+    next(error)
   }
 }
