@@ -1,5 +1,5 @@
 {
-  "name": "curlme-cli",
+  "name": "curlme",
   "version": "1.0.0",
   "description": "CLI tool for curlme",
   "type": "module",
@@ -12,7 +12,7 @@
     "dev": "NODE_ENV=development tsx watch src/index.ts",
     "check-types": "tsc --noEmit",
     "install-global": "npm run build && npm install -g .",
-    "uninstall-global": "npm uninstall -g curlme-cli"
+    "uninstall-global": "npm uninstall -g curlme"
   },
   "keywords": [
     "developers",
