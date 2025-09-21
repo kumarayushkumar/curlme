@@ -12,7 +12,7 @@ export const landingHandler = async (_req: Request, res: Response) => {
   const message = [
     'sudo npm i -g curlme',
     'visit https://github.com/kumarayushkumar/curlme',
-    `cli-version: 1.0.2`
+    `cli-version: 1.0.3`
   ]
   return res.status(HTTP_STATUS_CODE.OK).json({
     success: true,

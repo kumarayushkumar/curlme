@@ -33,7 +33,7 @@ export async function handleReply(
     { content },
     true
   )
-  if (response) success(response)
+  if (response) success(response.message)
 }
 
 /**
@@ -50,7 +50,7 @@ export async function handleDeleteReply(replyId: string): Promise<void> {
   }
 
   const response = await apiClient.delete(`/api/delete-reply/${replyId}`, true)
-  if (response) success(response)
+  if (response) success(response.message)
 }
 
 /**
@@ -71,5 +71,5 @@ export async function handleLikeReply(replyId: string): Promise<void> {
     {},
     true
   )
-  if (response) success(response)
+  if (response) success(response.message)
 }
