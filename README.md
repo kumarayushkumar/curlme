@@ -17,31 +17,6 @@ curlme is a platform designed specifically for developers who love the command l
 
 ## Quick Start
 
-### Using curl (No installation required)
-
-```bash
-# Get started
-curl https://your-app.herokuapp.com/curlme
-
-# Login with GitHub
-curl -X POST https://your-app.herokuapp.com/login
-
-# Create a post
-curl -X POST https://your-app.herokuapp.com/create-post \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"content": "Hello from the terminal! 🚀"}'
-
-# Browse the feed
-curl https://your-app.herokuapp.com/feed
-
-# Like a post
-curl -X POST https://your-app.herokuapp.com/toggle-like-post/POST_ID \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
-### Using CLI Tool(Recommended)
-
 ```bash
 # Install globally
 sudo npm install -g curlme
