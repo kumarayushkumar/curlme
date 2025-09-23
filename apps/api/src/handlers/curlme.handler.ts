@@ -10,8 +10,11 @@ import { HTTP_STATUS_CODE } from '../utils/constants.js'
  */
 export const landingHandler = async (_req: Request, res: Response) => {
   const message = [
+    'Welcome to Curlme!',
+    'a curl based social media platform',
+    'to get started, install the cli using',
     'sudo npm i -g curlme',
-    'visit https://github.com/kumarayushkumar/curlme',
+    'for documentation visit https://github.com/kumarayushkumar/curlme',
     `cli-version: 1.0.3`
   ]
   return res.status(HTTP_STATUS_CODE.OK).json({
