@@ -15,7 +15,7 @@ export const landingHandler = async (_req: Request, res: Response) => {
     'to get started, install the cli using',
     'sudo npm i -g curlme',
     'for documentation visit https://github.com/kumarayushkumar/curlme',
-    `cli-version: 1.0.3`
+    `cli-version: 1.0.5`
   ]
   return res.status(HTTP_STATUS_CODE.OK).json({
     success: true,
