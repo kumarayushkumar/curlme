@@ -76,13 +76,18 @@ const getFeedController = async (
   // Check if there are more posts in cache
   const hasNextPage =
     paginatedPosts.length > limit || endIndex + 1 < cachedPosts.length
-  const resultPosts =
-    hasNextPage && paginatedPosts.length > limit
-      ? paginatedPosts.slice(0, limit)
-      : paginatedPosts.slice(0, limit)
+  const resultPosts = paginatedPosts.slice(0, limit)
+
+  const filteredPosts = resultPosts.map(post => {
+    const { userId, user, ...rest } = post
+    return {
+      ...rest,
+      username: user.username
+    }
+  })
 
   return {
-    posts: resultPosts,
+    posts: filteredPosts,
     pagination: {
       currentPage: page,
       limit: limit,

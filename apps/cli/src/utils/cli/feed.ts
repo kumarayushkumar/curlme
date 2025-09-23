@@ -144,7 +144,7 @@ export async function handleFeed(): Promise<void> {
         break
 
       case '\u001b[B': // Down arrow
-        const hasNext = feedData?.data?.pagination?.hasNextPage
+        const hasNext = feedData?.data?.feed.pagination?.hasNextPage
         if (
           hasNext &&
           !isLoading &&
@@ -156,7 +156,7 @@ export async function handleFeed(): Promise<void> {
           displayFeed(currentPage)
         } else if (
           !hasNext &&
-          feedData?.data?.pagination &&
+          feedData?.data?.feed.pagination &&
           currentStatusMessage !== 'Already on last page'
         ) {
           showStatusMessage('Already on last page', 'grey')
@@ -205,9 +205,7 @@ export async function handleFeed(): Promise<void> {
 
   // Set up key listener
   process.stdin.on('data', handleKeyPress)
-
-  console.clear()
-  console.log('')
+  process.stdout.write('\x1Bc')
 
   await displayFeed(currentPage)
 }

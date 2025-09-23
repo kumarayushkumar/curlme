@@ -10,7 +10,7 @@ import { logger } from '../utils/logger.js'
  * Rate limiting middleware to prevent API abuse
  */
 export const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
+  windowMs: 1 * 10 * 1000, // 10 seconds
   limit: 10,
   standardHeaders: true,
   legacyHeaders: false,
