@@ -31,12 +31,11 @@ async function getCurrentVersion(): Promise<string> {
 export async function getLatestVersionFromAPI(): Promise<string | null> {
   try {
     const data = await apiClient.request('/')
+    if (!data) return null
     const versionLine = data.data.message.find((line: string) =>
       line.trim().startsWith('cli-version:')
     )
-    if (versionLine) {
-      return versionLine.trim().split(': ')[1]
-    }
+    if (versionLine) return versionLine.trim().split(': ')[1]
     return null
   } catch (error) {
     return null

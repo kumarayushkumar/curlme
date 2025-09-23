@@ -82,6 +82,7 @@ export class ApiClient {
         }
       } else {
         error(`Network Error: ${err.message}`)
+        process.exit(1) // Exit on network errors
       }
       return null
     }
