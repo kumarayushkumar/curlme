@@ -18,7 +18,7 @@ export const limiter = rateLimit({
     logger.error(
       `too many requests made to the request: ${req.method} | ${req.originalUrl || req.url || 'unknown path'} | from: ${req.ip} | userId: ${req?.user?.userId}`
     )
-    res.status(HTTP_STATUS_CODE.TOO_MANY_REQUESTS).json({
+    return res.status(HTTP_STATUS_CODE.TOO_MANY_REQUESTS).json({
       success: false,
       error: 'too_many_requests',
       message: 'slow down, take it easy'
