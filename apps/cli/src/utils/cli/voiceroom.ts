@@ -270,7 +270,7 @@ function getWsUrl(): string {
   const base =
     process.env.NODE_ENV === 'development'
       ? 'ws://localhost:8000'
-      : 'ws://api.curlme.dev'
+      : 'wss://api.curlme.dev'
   return `${base}/ws/voiceroom`
 }
 
