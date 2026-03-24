@@ -14,6 +14,7 @@ import {
 } from './post.js'
 import { handleDeleteReply, handleLikeReply, handleReply } from './reply.js'
 import { handleProfile } from './user.js'
+import { handleVoiceRoom } from './voiceroom.js'
 
 /**
  * Handles the curlme feedback command to fetch and display feedback message
@@ -61,6 +62,9 @@ ${colorize('Commands:', 'bold')}
 
   ${colorize('Feed:', 'yellow')}
   feed                         Show feed (interactive mode with ↑↓ navigation)
+
+  ${colorize('Voice:', 'yellow')}
+  voiceroom                    Join the global voice room
 
   ${colorize('Feedback:', 'yellow')}
   feedback                     Contact support or report issues
@@ -119,6 +123,9 @@ export async function handleCommand(
       break
     case 'feed':
       await handleFeed()
+      break
+    case 'voiceroom':
+      await handleVoiceRoom()
       break
     case 'feedback':
       await handleFeedback()

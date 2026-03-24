@@ -8,6 +8,7 @@ import errorHandler from './middlewares/handle-error.js'
 import ROUTER from './routes/index.js'
 import { HTTP_STATUS_CODE } from './utils/constants.js'
 import { logger, logResReq } from './utils/logger.js'
+import { setupVoiceRoom } from './websocket/voice-room.js'
 
 const app = express()
 
@@ -99,11 +100,11 @@ const serverConfig = () => {
 
   const PORT = process.env.PORT || 8000
 
-  http
-    .createServer(app)
-    .listen(PORT, () =>
-      console.log(`express is listening at http://localhost:${PORT}`)
-    )
+  const server = http.createServer(app)
+  setupVoiceRoom(server)
+  server.listen(PORT, () =>
+    console.log(`express is listening at http://localhost:${PORT}`)
+  )
 }
 
 serverConfig()
