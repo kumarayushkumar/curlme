@@ -3,8 +3,9 @@
  */
 
 import axios from 'axios'
-import { getToken } from './config.js'
-import { error } from './output.js'
+import { clearToken, getToken } from './config.js'
+import { handleLogin } from './cli/auth.js'
+import { error, heading } from './output.js'
 
 export class ApiClient {
   private baseURL: string
@@ -41,10 +42,12 @@ export class ApiClient {
     }
 
     if (requireAuth) {
-      const token = getToken()
+      let token = getToken()
       if (!token) {
-        error('Authentication required. Please run: curlme login')
-        return null
+        heading('Authentication required. Logging you in...')
+        await handleLogin()
+        token = getToken()
+        if (!token) return null
       }
       headers.Authorization = `Bearer ${token}`
     }
@@ -68,12 +71,16 @@ export class ApiClient {
     } catch (err: any) {
       if (err.response) {
         const errorData = err.response.data
-        if (errorData?.error === 'authorization_pending') {
+        if (errorData?.error === 'token_expired') {
+          clearToken()
+          heading('Session expired. Logging you in again...')
+          await handleLogin()
+          process.exit(0)
+        } else if (errorData?.error === 'authorization_pending') {
           error(
             'Authorization is still pending. Please complete it and try again.'
           )
-        }
-        if (errorData?.error === 'authorization_pending_or_denied') {
+        } else if (errorData?.error === 'authorization_pending_or_denied') {
           error('Please complete GitHub authorization.')
         } else {
           error(

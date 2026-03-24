@@ -6,11 +6,11 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-const FOLDER_NAME =
-  process.env.NODE_ENV === 'development' ? '.curlme-dev' : '.curlme'
-const CONFIG_DIR = path.join(os.homedir(), FOLDER_NAME)
-const TOKEN_FILE = path.join(CONFIG_DIR, 'token')
-const DEVICE_CODE_FILE = path.join(CONFIG_DIR, 'device_code')
+const isDev = process.env.NODE_ENV === 'development'
+const ENV_SUFFIX = isDev ? '.dev' : ''
+const CONFIG_DIR = path.join(os.homedir(), '.curlme')
+const TOKEN_FILE = path.join(CONFIG_DIR, `token${ENV_SUFFIX}`)
+const DEVICE_CODE_FILE = path.join(CONFIG_DIR, `device_code${ENV_SUFFIX}`)
 
 // Ensure config directory exists
 if (!fs.existsSync(CONFIG_DIR)) {
@@ -76,9 +76,33 @@ export function clearDeviceCode(): void {
 }
 
 /**
- *  Checks if the user is authenticated (i.e., if a token exists)
+ * Checks if a JWT token has expired by decoding the payload
+ * @param {string} token - The JWT token to check
+ * @returns {boolean} True if the token is expired
+ */
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(
+      Buffer.from(token.split('.')[1], 'base64').toString()
+    )
+    return payload.exp * 1000 < Date.now()
+  } catch {
+    return true
+  }
+}
+
+/**
+ *  Checks if the user is authenticated with a valid (non-expired) token
  * @returns {boolean} True if authenticated, false otherwise
  */
 export function isAuthenticated(): boolean {
-  return getToken() !== null
+  const token = getToken()
+  if (!token) return false
+
+  if (isTokenExpired(token)) {
+    clearToken()
+    return false
+  }
+
+  return true
 }

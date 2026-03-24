@@ -36,12 +36,12 @@ export async function handleLogin(): Promise<void> {
       saveToken(response.data.token)
       clearDeviceCode()
       success('Login successful!')
-    } else {
-      console.log(
-        'GitHub authorization is still pending. Please complete it in your browser.'
-      )
+      return
     }
-    return
+
+    clearDeviceCode()
+    console.log('Previous authorization expired or was not completed.')
+    console.log('Starting a new login...\n')
   }
 
   heading('Starting GitHub authentication...')
