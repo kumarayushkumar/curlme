@@ -1,5 +1,17 @@
 curlme.dev, api.curlme.dev {
   encode gzip
+
+  # WebSocket for voice room - no gzip, no buffering
+  @websocket {
+    path /ws/*
+    header Connection *Upgrade*
+    header Upgrade websocket
+  }
+  reverse_proxy @websocket curlme-api:8000 {
+    flush_interval -1
+  }
+
+  # Regular API traffic
   reverse_proxy curlme-api:8000
 
   rate_limit {

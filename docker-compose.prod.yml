@@ -62,6 +62,10 @@ services:
     build:
       context: ./caddy
       dockerfile: Dockerfile
+      cache_from:
+        - type=local,src=/tmp/caddy-cache
+      cache_to:
+        - type=local,dest=/tmp/caddy-cache
     container_name: curlme-caddy
     restart: always
     ports:
