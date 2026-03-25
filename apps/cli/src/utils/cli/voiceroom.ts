@@ -27,242 +27,56 @@ function hasCommand(cmd: string): boolean {
 }
 
 function getAudioDriver(): AudioDriver | null {
-  const platform = process.platform
-
-  // raw 16-bit PCM, mono, 16kHz format args for each tool
-  if (platform === 'darwin') {
-    // macOS: sox (rec/play)
-    if (hasCommand('rec')) {
-      return {
-        recCmd: 'rec',
-        recArgs: [
-          '-t',
-          'raw',
-          '-b',
-          '16',
-          '-c',
-          '1',
-          '-r',
-          '16000',
-          '-e',
-          'signed-integer',
-          '-q',
-          '-'
-        ],
-        playCmd: 'play',
-        playArgs: [
-          '-t',
-          'raw',
-          '-b',
-          '16',
-          '-c',
-          '1',
-          '-r',
-          '16000',
-          '-e',
-          'signed-integer',
-          '-q',
-          '-'
-        ]
-      }
-    }
-    // macOS: ffmpeg as fallback
-    if (hasCommand('ffmpeg')) {
-      return {
-        recCmd: 'ffmpeg',
-        recArgs: [
-          '-f',
-          'avfoundation',
-          '-i',
-          ':default',
-          '-ar',
-          '16000',
-          '-ac',
-          '1',
-          '-f',
-          's16le',
-          '-loglevel',
-          'quiet',
-          'pipe:1'
-        ],
-        playCmd: 'ffplay',
-        playArgs: [
-          '-f',
-          's16le',
-          '-ar',
-          '16000',
-          '-ac',
-          '1',
-          '-nodisp',
-          '-loglevel',
-          'quiet',
-          '-i',
-          'pipe:0'
-        ]
-      }
-    }
+  // Both sox (rec) and ffmpeg (ffplay) are required
+  if (!hasCommand('rec') || !hasCommand('ffplay')) {
+    return null
   }
 
-  if (platform === 'linux') {
-    // Linux: arecord/aplay (ALSA, pre-installed on most distros)
-    if (hasCommand('arecord')) {
-      return {
-        recCmd: 'arecord',
-        recArgs: [
-          '-f',
-          'S16_LE',
-          '-c',
-          '1',
-          '-r',
-          '16000',
-          '-t',
-          'raw',
-          '-q',
-          '-'
-        ],
-        playCmd: 'aplay',
-        playArgs: [
-          '-f',
-          'S16_LE',
-          '-c',
-          '1',
-          '-r',
-          '16000',
-          '-t',
-          'raw',
-          '-q',
-          '-'
-        ]
-      }
-    }
-    // Linux: sox fallback
-    if (hasCommand('rec')) {
-      return {
-        recCmd: 'rec',
-        recArgs: [
-          '-t',
-          'raw',
-          '-b',
-          '16',
-          '-c',
-          '1',
-          '-r',
-          '16000',
-          '-e',
-          'signed-integer',
-          '-q',
-          '-'
-        ],
-        playCmd: 'play',
-        playArgs: [
-          '-t',
-          'raw',
-          '-b',
-          '16',
-          '-c',
-          '1',
-          '-r',
-          '16000',
-          '-e',
-          'signed-integer',
-          '-q',
-          '-'
-        ]
-      }
-    }
+  return {
+    recCmd: 'rec',
+    recArgs: [
+      '-t',
+      'raw',
+      '-b',
+      '16',
+      '-c',
+      '1',
+      '-r',
+      '16000',
+      '-e',
+      'signed-integer',
+      '-q',
+      '-'
+    ],
+    playCmd: 'ffplay',
+    playArgs: [
+      '-f',
+      's16le',
+      '-ar',
+      '16000',
+      '-ac',
+      '1',
+      '-nodisp',
+      '-loglevel',
+      'quiet',
+      '-i',
+      'pipe:0'
+    ]
   }
-
-  if (platform === 'win32') {
-    // Windows: sox via choco/scoop, or ffmpeg
-    if (hasCommand('rec')) {
-      return {
-        recCmd: 'rec',
-        recArgs: [
-          '-t',
-          'raw',
-          '-b',
-          '16',
-          '-c',
-          '1',
-          '-r',
-          '16000',
-          '-e',
-          'signed-integer',
-          '-q',
-          '-'
-        ],
-        playCmd: 'play',
-        playArgs: [
-          '-t',
-          'raw',
-          '-b',
-          '16',
-          '-c',
-          '1',
-          '-r',
-          '16000',
-          '-e',
-          'signed-integer',
-          '-q',
-          '-'
-        ]
-      }
-    }
-    if (hasCommand('ffmpeg')) {
-      return {
-        recCmd: 'ffmpeg',
-        recArgs: [
-          '-f',
-          'dshow',
-          '-i',
-          'audio=default',
-          '-ar',
-          '16000',
-          '-ac',
-          '1',
-          '-f',
-          's16le',
-          '-loglevel',
-          'quiet',
-          'pipe:1'
-        ],
-        playCmd: 'ffplay',
-        playArgs: [
-          '-f',
-          's16le',
-          '-ar',
-          '16000',
-          '-ac',
-          '1',
-          '-nodisp',
-          '-loglevel',
-          'quiet',
-          '-i',
-          'pipe:0'
-        ]
-      }
-    }
-  }
-
-  return null
 }
 
 function printInstallHelp() {
   const platform = process.platform
-  error('No supported audio tool found.')
+  error('Both sox and ffmpeg are required for voice room.')
   console.log()
   if (platform === 'darwin') {
-    console.log('  Install one of:')
-    console.log(colorize('    brew install sox', 'highlight'))
-    console.log(colorize('    brew install ffmpeg', 'grey'))
+    console.log(colorize('  brew install sox ffmpeg', 'highlight'))
   } else if (platform === 'linux') {
-    console.log('  Install one of:')
-    console.log(colorize('    sudo apt install alsa-utils', 'highlight'))
-    console.log(colorize('    sudo apt install sox libsox-fmt-all', 'grey'))
+    console.log(
+      colorize('  sudo apt install sox libsox-fmt-all ffmpeg', 'highlight')
+    )
   } else if (platform === 'win32') {
-    console.log('  Install one of:')
-    console.log(colorize('    choco install sox', 'highlight'))
-    console.log(colorize('    scoop install ffmpeg', 'grey'))
+    console.log(colorize('  choco install sox ffmpeg', 'highlight'))
   }
 }
 
@@ -300,6 +114,8 @@ export async function handleVoiceRoom(): Promise<void> {
   let rec: ChildProcess | null = null
   let play: ChildProcess | null = null
   let muted = false
+  let suppressMic = false
+  let suppressTimeout: NodeJS.Timeout | null = null
   let participants: { username: string; muted: boolean }[] = []
 
   function renderUI() {
@@ -331,7 +147,7 @@ export async function handleVoiceRoom(): Promise<void> {
     })
 
     rec.stdout?.on('data', (chunk: Buffer) => {
-      if (!muted && ws.readyState === WebSocket.OPEN) {
+      if (!muted && !suppressMic && ws.readyState === WebSocket.OPEN) {
         ws.send(chunk)
       }
     })
@@ -393,6 +209,12 @@ export async function handleVoiceRoom(): Promise<void> {
   ws.on('message', (data: Buffer, isBinary: boolean) => {
     if (isBinary) {
       play?.stdin?.write(data)
+      // Echo suppression: mute mic while playing received audio
+      suppressMic = true
+      if (suppressTimeout) clearTimeout(suppressTimeout)
+      suppressTimeout = setTimeout(() => {
+        suppressMic = false
+      }, 200)
     } else {
       try {
         const msg = JSON.parse(data.toString())
