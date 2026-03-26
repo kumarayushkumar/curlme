@@ -27,8 +27,8 @@ function hasCommand(cmd: string): boolean {
 }
 
 function getAudioDriver(): AudioDriver | null {
-  // Both sox (rec) and ffmpeg (ffplay) are required
-  if (!hasCommand('rec') || !hasCommand('ffplay')) {
+  // Both sox rec and play are required
+  if (!hasCommand('rec') || !hasCommand('play')) {
     return null
   }
 
@@ -48,35 +48,34 @@ function getAudioDriver(): AudioDriver | null {
       '-q',
       '-'
     ],
-    playCmd: 'ffplay',
+    playCmd: 'play',
     playArgs: [
-      '-f',
-      's16le',
-      '-ar',
-      '16000',
-      '-ac',
+      '-t',
+      'raw',
+      '-b',
+      '16',
+      '-c',
       '1',
-      '-nodisp',
-      '-loglevel',
-      'quiet',
-      '-i',
-      'pipe:0'
+      '-r',
+      '16000',
+      '-e',
+      'signed-integer',
+      '-q',
+      '-'
     ]
   }
 }
 
 function printInstallHelp() {
   const platform = process.platform
-  error('Both sox and ffmpeg are required for voice room.')
+  error('sox is required for voice room.')
   console.log()
   if (platform === 'darwin') {
-    console.log(colorize('  brew install sox ffmpeg', 'highlight'))
+    console.log(colorize('  brew install sox', 'highlight'))
   } else if (platform === 'linux') {
-    console.log(
-      colorize('  sudo apt install sox libsox-fmt-all ffmpeg', 'highlight')
-    )
+    console.log(colorize('  sudo apt install sox libsox-fmt-all', 'highlight'))
   } else if (platform === 'win32') {
-    console.log(colorize('  choco install sox ffmpeg', 'highlight'))
+    console.log(colorize('  choco install sox', 'highlight'))
   }
 }
 
