@@ -105,11 +105,21 @@ export function jsonToText(data: any, indent: number = 0): string {
 
   if (typeof data === 'object') {
     const entries = Object.entries(data)
+    const inlineGroup: string[] = []
+
+    const flushInlineGroup = () => {
+      if (inlineGroup.length > 0) {
+        output += `${indentStr}${inlineGroup.join('  ')}\n`
+        inlineGroup.length = 0
+      }
+    }
 
     entries.forEach(([key, value]) => {
       if (value === null || value === undefined) {
+        flushInlineGroup()
         output += `${indentStr}${key + ':'} ${colorize('(not set)', 'grey')}\n`
       } else if (typeof value === 'object') {
+        flushInlineGroup()
         output += `${indentStr}${key + ':'}\n`
         output += jsonToText(value, indent + 1)
       } else {
@@ -126,6 +136,9 @@ export function jsonToText(data: any, indent: number = 0): string {
             const date = new Date(value)
             if (!isNaN(date.getTime())) {
               formattedValue = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+              flushInlineGroup()
+              output += `${indentStr}${key + ':'} ${formattedValue}\n`
+              return
             }
           }
         }
@@ -138,10 +151,17 @@ export function jsonToText(data: any, indent: number = 0): string {
           formattedValue = colorize(formattedValue, 'grey')
         }
 
-        output += `${indentStr}${key + ':'} ${formattedValue}\n`
+        // Group short numeric/boolean fields on the same line
+        if (typeof value === 'number' || typeof value === 'boolean') {
+          inlineGroup.push(`${key + ':'} ${formattedValue}`)
+        } else {
+          flushInlineGroup()
+          output += `${indentStr}${key + ':'} ${formattedValue}\n`
+        }
       }
     })
 
+    flushInlineGroup()
     return output
   }
 

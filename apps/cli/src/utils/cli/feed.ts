@@ -14,6 +14,7 @@ export async function handleFeed(): Promise<void> {
   let currentPage = 1
   let isLoading = false
   let feedData: any = null
+  let autoRefreshTimer: NodeJS.Timeout | null = null
 
   const displayFeed = async (page: number) => {
     if (isLoading) return
@@ -191,6 +192,7 @@ export async function handleFeed(): Promise<void> {
   }
 
   const cleanup = () => {
+    if (autoRefreshTimer) clearInterval(autoRefreshTimer)
     if (process.stdin.isTTY) {
       process.stdin.setRawMode(false)
     }
@@ -208,4 +210,8 @@ export async function handleFeed(): Promise<void> {
   process.stdout.write('\x1Bc')
 
   await displayFeed(currentPage)
+
+  autoRefreshTimer = setInterval(() => {
+    displayFeed(currentPage)
+  }, 10000)
 }

@@ -113,9 +113,14 @@ export async function handleVoiceRoom(): Promise<void> {
   let rec: ChildProcess | null = null
   let play: ChildProcess | null = null
   let muted = false
-  let suppressMic = false
-  let suppressTimeout: NodeJS.Timeout | null = null
   let participants: { username: string; muted: boolean }[] = []
+
+  // Jitter buffer: track estimated buffered audio to prevent chipmunk effect
+  // when network delivers chunks in bursts faster than real-time playback
+  const BYTES_PER_MS = (16000 * 2) / 1000 // 32 bytes/ms at 16kHz mono 16-bit
+  const MAX_BUFFER_MS = 400 // drop chunks if buffer exceeds 400ms
+  let bufferedAudioMs = 0
+  let lastChunkTime = 0
 
   function renderUI() {
     console.clear()
@@ -146,7 +151,7 @@ export async function handleVoiceRoom(): Promise<void> {
     })
 
     rec.stdout?.on('data', (chunk: Buffer) => {
-      if (!muted && !suppressMic && ws.readyState === WebSocket.OPEN) {
+      if (!muted && ws.readyState === WebSocket.OPEN) {
         ws.send(chunk)
       }
     })
@@ -207,13 +212,21 @@ export async function handleVoiceRoom(): Promise<void> {
 
   ws.on('message', (data: Buffer, isBinary: boolean) => {
     if (isBinary) {
-      play?.stdin?.write(data)
-      // Echo suppression: mute mic while playing received audio
-      suppressMic = true
-      if (suppressTimeout) clearTimeout(suppressTimeout)
-      suppressTimeout = setTimeout(() => {
-        suppressMic = false
-      }, 200)
+      const now = Date.now()
+
+      // Drain buffer estimate based on real time elapsed since last chunk
+      if (lastChunkTime > 0) {
+        bufferedAudioMs = Math.max(0, bufferedAudioMs - (now - lastChunkTime))
+      }
+      lastChunkTime = now
+
+      const chunkMs = data.length / BYTES_PER_MS
+
+      // Only write if buffer is within limit — drops excess to prevent chipmunk
+      if (bufferedAudioMs < MAX_BUFFER_MS) {
+        play?.stdin?.write(data)
+        bufferedAudioMs += chunkMs
+      }
     } else {
       try {
         const msg = JSON.parse(data.toString())
