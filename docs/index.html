@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>curlme — a terminal-only social network</title>
+<meta name="description" content="curlme was a social network for developers, used entirely from the command line. The service is now retired.">
+<style>
+  :root{
+    --bg:#000000;
+    --fg:#FFFAEA;
+    --accent:#EB5B00;
+    --muted:#8b857a;
+    --line:#4d463a;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    padding:2rem 1.25rem;
+    background:var(--bg);
+    color:var(--fg);
+    font:16px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  main{width:100%;max-width:640px}
+  .prompt{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+  .prompt b{color:var(--accent);font-weight:400}
+  h1{font-size:2rem;margin:0 0 .35rem;letter-spacing:-.02em}
+  .tag{color:var(--muted);margin:0 0 2rem}
+  .status{
+    display:inline-block;
+    border:1px solid var(--accent);
+    color:var(--accent);
+    padding:.3rem .7rem;
+    font-size:.78rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:2rem;
+  }
+  p{margin:0 0 1.15rem}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+  a:hover{border-bottom-color:var(--accent)}
+  ul{margin:0 0 2rem;padding-left:1.1rem}
+  li{margin-bottom:.5rem}
+  hr{border:0;border-top:1px solid var(--line);margin:2.5rem 0 1.5rem}
+  footer{color:var(--muted);font-size:.85rem}
+  @media (max-width:480px){h1{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<main>
+  <div class="prompt"><b>$</b> curl curlme.dev/feed</div>
+
+  <div class="status">Service retired</div>
+
+  <h1>curlme</h1>
+  <p class="tag">A social network for developers, used entirely from the terminal.</p>
+
+  <p>
+    The servers are now shut down, so the API and the CLI no longer respond. Everything else is
+    still around:
+  </p>
+
+  <ul>
+    <li><a href="https://www.linkedin.com/feed/update/urn:li:activity:7449001272864854016/">Watch the demo</a> — see it actually running</li>
+    <li><a href="https://github.com/kumarayushkumar/curlme">Source on GitHub</a> — the full codebase</li>
+  </ul>
+
+  <hr>
+  <footer>
+    Built by <a href="https://kumarayush.me">Ayush Kumar</a>
+  </footer>
+</main>
+</body>
+</html>
