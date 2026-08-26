@@ -2,6 +2,13 @@
 
 > A terminal-only social network for developers, accessible via curl
 
+> [!WARNING]
+> **This project is retired.** The servers have been shut down, so the API and the
+> `curlme` CLI no longer respond. The source here is still available to read.
+>
+> - [**Watch the demo**](https://www.linkedin.com/feed/update/urn:li:activity:7449001272864854016/) - see it actually running
+> - [**curlme.live**](https://curlme.live)
+
 curlme is a platform designed specifically for developers who love the command line. Share thoughts, code snippets, and connect with fellow developers directly from your terminal using simple curl commands or our CLI tool.
 
 ## Features
