@@ -1,0 +1,24 @@
+meta {
+  name: get designation stats
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/admin/designations
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/admin/designations` - how many accounts sit under each
+  designation. Takes no parameters.
+
+  Not to be confused with the public `GET /api/designations`, which lists the
+  catalogue itself.
+}

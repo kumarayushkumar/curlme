@@ -1,0 +1,42 @@
+meta {
+  name: set user active
+  type: http
+  seq: 10
+  tags: [
+    destructive
+  ]
+}
+
+patch {
+  url: {{baseUrl}}/api/admin/users/:username/active
+  body: json
+  auth: inherit
+}
+
+params:path {
+  username: {{targetUsername}}
+}
+
+body:json {
+  {
+    "is_active": true
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `PATCH /api/admin/users/:username/active` - the soft delete. The row stays,
+  so this is a PATCH of the account's state rather than a DELETE.
+
+  Defaults to `true` on purpose: a whole collection run should not leave the
+  target account locked out. Send `false` to perform the soft delete, which
+  `authMiddleware` honours on the account's very next request rather than
+  waiting for its token to expire.
+
+  404 `not_found` for an unknown username, 400 `self_deactivation` when an
+  admin targets themselves.
+}

@@ -1,0 +1,35 @@
+meta {
+  name: register follow target
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{targetUsername}}",
+    "password": "{{targetPassword}}",
+    "name": "Bruno Friend",
+    "designation": "{{designation}}"
+  }
+}
+
+tests {
+  test("creates the counterpart account, or reports it already exists", function() {
+    expect(res.getStatus()).to.be.oneOf([201, 409]);
+  });
+}
+
+docs {
+  The second account the `Follow` folder and the two admin user routes act on.
+
+  Registering it here keeps a collection run self contained: nothing has to
+  already exist in the database for `follow user` or `set user role` to have a
+  target. Deliberately does not touch `token`, so the session stays with
+  `{{username}}`.
+}

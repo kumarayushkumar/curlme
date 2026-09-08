@@ -1,0 +1,41 @@
+meta {
+  name: create designation
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/api/admin/designations
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "slug": "bruno_tester",
+    "label": "Bruno Tester",
+    "category": "CONSUMER",
+    "group": "engineering"
+  }
+}
+
+tests {
+  test("creates the designation, or reports the slug is taken", function() {
+    expect(res.getStatus()).to.be.oneOf([201, 409]);
+  });
+}
+
+docs {
+  `POST /api/admin/designations` - adds a row to the catalogue.
+
+  | Field | Rule |
+  | --- | --- |
+  | `slug` | 2-64 chars, lowercase words joined by single `_` or `-` |
+  | `label` | 2-120 chars |
+  | `category` | `CREATOR` or `CONSUMER` |
+  | `topic` | optional, 2-64 chars, only meaningful for creators |
+  | `group` | 2-64 chars, the bucket the picker groups on |
+
+  409 `slug_taken` is accepted alongside 201 so a repeat collection run
+  stays green.
+}

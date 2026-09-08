@@ -1,0 +1,27 @@
+meta {
+  name: unfollow user
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/api/unfollow/:username
+  body: none
+  auth: inherit
+}
+
+params:path {
+  username: {{targetUsername}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `DELETE /api/unfollow/:username`
+
+  404 `not_found` when the user does not exist, 409 `not_following` when you
+  were not following them.
+}

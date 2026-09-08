@@ -3,9 +3,22 @@
  */
 
 import { apiClient } from '../api.js'
-import { colorize, displayAsText } from '../output.js'
-import { handleLogin, handleLogout } from './auth.js'
+import { colorize, displayAsText, error } from '../output.js'
+import { handleAdmin } from './admin.js'
+import {
+  handleLogin,
+  handleLogout,
+  handleRegister,
+  handleSignin
+} from './auth.js'
+import { handleDesignations } from './designation.js'
 import { handleFeed } from './feed.js'
+import {
+  handleFollow,
+  handleFollowers,
+  handleFollowing,
+  handleUnfollow
+} from './follow.js'
 import {
   handleDeletePost,
   handleLikePost,
@@ -13,7 +26,7 @@ import {
   handlePostView
 } from './post.js'
 import { handleDeleteReply, handleLikeReply, handleReply } from './reply.js'
-import { handleProfile } from './user.js'
+import { handleBio, handleProfile } from './user.js'
 import { handleVoiceRoom } from './voiceroom.js'
 
 /**
@@ -42,12 +55,23 @@ ${colorize('Usage:', 'bold')}
 
 ${colorize('Commands:', 'bold')}
   ${colorize('Authentication:', 'yellow')}
+  register [username]          Create an account with a password
+  signin [username]            Sign in with your password
   login                        Authenticate with GitHub
   logout                       Clear authentication token
 
   ${colorize('Profile:', 'yellow')}
   profile                      Show your profile
   profile <username>           Show another user's profile
+  bio "<text>"                 Edit your bio (pass "" to clear it)
+  designations [category] [group]
+                               List designations (creator or consumer, by group)
+
+  ${colorize('Following:', 'yellow')}
+  follow <username>            Follow a user
+  unfollow <username>          Unfollow a user
+  followers [username] [page]  Who follows you, or another user
+  following [username] [page]  Who you follow, or who another user follows
 
   ${colorize('Posts:', 'yellow')}
   post "<content>"             Create a new post
@@ -66,12 +90,62 @@ ${colorize('Commands:', 'bold')}
   ${colorize('Voice:', 'yellow')}
   voiceroom                    Join the global voice room
 
+  ${colorize('Admin:', 'yellow')}
+  admin [subcommand]           Platform statistics, run 'curlme admin help'
+
   ${colorize('Feedback:', 'yellow')}
   feedback                     Contact support or report issues
 
   ${colorize('Help:', 'yellow')}
   help                         Show this help message
 `)
+}
+
+type CommandHandler = (args: string[]) => Promise<void> | void
+
+/**
+ * Command table. A lookup keeps dispatch flat as commands are added, and makes
+ * the set of valid commands a single readable list.
+ */
+const COMMANDS: Record<string, CommandHandler> = {
+  // authentication
+  register: args => handleRegister(args[0]),
+  signin: args => handleSignin(args[0]),
+  login: () => handleLogin(),
+  logout: () => handleLogout(),
+
+  // profile
+  profile: args => handleProfile(args[0]),
+  bio: args => handleBio(args),
+  designations: args => handleDesignations(args[0], args[1]),
+
+  // following
+  follow: args => handleFollow(args[0] as string),
+  unfollow: args => handleUnfollow(args[0] as string),
+  followers: args => handleFollowers(args[0], args[1]),
+  following: args => handleFollowing(args[0], args[1]),
+
+  // posts
+  post: args => handlePost(args.join(' ').trim()),
+  'post-view': args => handlePostView(args[0] as string, args[1]),
+  'post-delete': args => handleDeletePost(args[0] as string),
+  'post-like': args => handleLikePost(args[0] as string),
+
+  // replies
+  reply: args => handleReply(args[0] as string, args.slice(1).join(' ').trim()),
+  'reply-delete': args => handleDeleteReply(args[0] as string),
+  'reply-like': args => handleLikeReply(args[0] as string),
+
+  // reading
+  feed: () => handleFeed(),
+  voiceroom: () => handleVoiceRoom(),
+
+  // administration
+  admin: args => handleAdmin(args),
+
+  // meta
+  feedback: () => handleFeedback(),
+  help: () => showHelp()
 }
 
 /**
@@ -85,54 +159,17 @@ export async function handleCommand(
   command: string,
   args: string[]
 ): Promise<void> {
-  switch (command) {
-    case 'login':
-      await handleLogin()
-      break
-    case 'logout':
-      handleLogout()
-      break
-    case 'profile':
-      await handleProfile(args[0])
-      break
-    case 'post': {
-      const content = args.join(' ').trim()
-      await handlePost(content)
-      break
-    }
-    case 'post-view':
-      await handlePostView(args[0], args[1])
-      break
-    case 'post-delete':
-      await handleDeletePost(args[0])
-      break
-    case 'post-like':
-      await handleLikePost(args[0])
-      break
-    case 'reply': {
-      const postId = args[0]
-      const content = args.slice(1).join(' ').trim()
-      await handleReply(postId, content)
-      break
-    }
-    case 'reply-delete':
-      await handleDeleteReply(args[0])
-      break
-    case 'reply-like':
-      await handleLikeReply(args[0])
-      break
-    case 'feed':
-      await handleFeed()
-      break
-    case 'voiceroom':
-      await handleVoiceRoom()
-      break
-    case 'feedback':
-      await handleFeedback()
-      break
-    case 'help':
-    default:
-      showHelp()
-      break
+  // Object.hasOwn, not a bare lookup: otherwise `curlme toString` would find
+  // Object.prototype.toString and silently call it instead of showing help.
+  const handler = Object.hasOwn(COMMANDS, command)
+    ? COMMANDS[command]
+    : undefined
+
+  if (!handler) {
+    error(`Unknown command '${command}'`)
+    showHelp()
+    return
   }
+
+  await handler(args)
 }

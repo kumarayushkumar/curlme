@@ -1,4 +1,7 @@
-# Build stage
+# Build stage.
+# This stage deliberately KEEPS devDependencies, because the one-shot `migrate`
+# service in docker-compose reuses it to run the Prisma CLI and tsx. Pruning
+# happens in the separate `pruned` stage below, so the runtime image stays slim.
 FROM node:current-alpine3.22 AS builder
 
 WORKDIR /app
@@ -19,7 +22,8 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Remove devDependencies
+# Pruning stage: strips devDependencies without stripping them from `builder`
+FROM builder AS pruned
 RUN npm prune --production
 
 # Production stage
@@ -29,7 +33,7 @@ WORKDIR /app
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
+COPY --from=pruned /app/node_modules ./node_modules
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package*.json ./
 

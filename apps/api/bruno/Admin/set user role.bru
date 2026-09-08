@@ -1,0 +1,39 @@
+meta {
+  name: set user role
+  type: http
+  seq: 9
+  tags: [
+    destructive
+  ]
+}
+
+patch {
+  url: {{baseUrl}}/api/admin/users/:username/role
+  body: json
+  auth: inherit
+}
+
+params:path {
+  username: {{targetUsername}}
+}
+
+body:json {
+  {
+    "role": "USER"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `PATCH /api/admin/users/:username/role` - `role` is `USER` or `ADMIN`.
+
+  Defaults to `USER` so an unattended collection run does not quietly hand out
+  admin. Send `ADMIN` to promote.
+
+  404 `not_found` for an unknown username, 400 `self_demotion` when an admin
+  tries to remove their own role.
+}

@@ -1,0 +1,25 @@
+meta {
+  name: delete reply
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/api/delete-reply/:replyId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  replyId: {{replyId}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `DELETE /api/delete-reply/:replyId` - only the author can delete. Anyone
+  else gets 404 `not_found`.
+}

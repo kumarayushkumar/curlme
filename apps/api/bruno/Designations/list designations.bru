@@ -1,0 +1,40 @@
+meta {
+  name: list designations
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/designations
+  body: none
+  auth: none
+}
+
+params:query {
+  ~category: CREATOR
+  ~group: tech
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+tests {
+  test("returns the catalogue", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().data.designations).to.be.an("array");
+  });
+}
+
+docs {
+  `GET /api/designations`
+
+  Both filters are optional and disabled by default.
+
+  - `category` - `CREATOR` or `CONSUMER`
+  - `group` - `tech`, `health`, `philosophy`, `spiritual`, `entertainment`,
+    `engineering`, `creative`, `business`, `outside_tech`, `unsettled`
+
+  Seed the table with `npm run db:seed` if it comes back empty.
+}

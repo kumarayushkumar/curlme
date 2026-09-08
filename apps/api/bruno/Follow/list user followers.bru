@@ -1,0 +1,29 @@
+meta {
+  name: list user followers
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/followers/:username?page=1&limit=20
+  body: none
+  auth: inherit
+}
+
+params:path {
+  username: {{targetUsername}}
+}
+
+params:query {
+  page: 1
+  limit: 20
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/followers/:username` - another account's followers.
+}

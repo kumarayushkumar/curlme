@@ -1,0 +1,35 @@
+meta {
+  name: github login - start device flow
+  type: http
+  seq: 4
+  tags: [
+    manual
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {}
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setEnvVar("deviceCode", res.getBody().data.device_code);
+  }
+}
+
+docs {
+  `POST /api/login` with an empty body.
+
+  Asks GitHub for a device code and returns `user_code` plus
+  `verification_uri`. Open that URI, enter the code, then run
+  `github login - exchange device code`.
+
+  `device_code` is saved into the environment for that next step. Needs
+  `GITHUB_CLIENT_ID` to be set on the API.
+}

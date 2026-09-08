@@ -6,7 +6,8 @@ import { prisma } from '../../config/database.js'
 import { updatePostInCache } from '../../utils/redis.js'
 
 /**
- * Deletes a reply and associated likes
+ * Deletes a reply and associated likes, subtracting the reply's likes from its
+ * author's `totalLikesReceived` in the same transaction.
  *
  * @param {string} replyId - The ID of the reply to delete
  * @param {string} userId - The ID of the user requesting deletion
@@ -27,6 +28,10 @@ const deleteReplyController = async (
     prisma.post.update({
       where: { id: postId },
       data: { repliesCount: { decrement: 1 } }
+    }),
+    prisma.user.update({
+      where: { id: reply.userId },
+      data: { totalLikesReceived: { decrement: reply.likesCount } }
     })
   ])
 

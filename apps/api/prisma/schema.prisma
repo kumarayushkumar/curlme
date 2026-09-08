@@ -13,16 +13,99 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// Access level of an account. Admins may read platform wide statistics
+/// and change the role of other accounts.
+enum Role {
+  USER
+  ADMIN
+}
+
+/// Whether a designation describes someone who publishes content (CREATOR)
+/// or someone who is primarily here to read it (CONSUMER).
+enum DesignationCategory {
+  CREATOR
+  CONSUMER
+}
+
+/// Designations are data, not code. Rows are seeded by `prisma/seed.ts` and can
+/// be added at runtime by an admin, so no part of the API or CLI hardcodes the
+/// available list.
+model Designation {
+  id       String              @id @default(uuid())
+  slug     String              @unique @db.VarChar(64)
+  label    String              @db.VarChar(120)
+  category DesignationCategory
+  /// What a creator publishes about. Null for consumers, who are described by
+  /// their occupation rather than a subject.
+  topic    String?             @db.VarChar(64)
+  /// Coarse bucket used for grouping in the picker and in admin reports, e.g.
+  /// "engineering", "creative", "business". Creators reuse their topic here.
+  group    String              @db.VarChar(64)
+  active   Boolean             @default(true)
+
+  createdAt DateTime @default(now())
+  users     User[]
+
+  @@index([category])
+  @@index([group])
+  @@index([active])
+}
+
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique @db.VarChar(39) // GitHub username same as GithubId
-  name      String   @db.VarChar(200) // Full name from GitHub
+  id       String  @id @default(uuid())
+  username String  @unique @db.VarChar(39) // GitHub username same as GithubId
+  name     String  @db.VarChar(200) // Full name from GitHub
+  bio      String? @db.VarChar(280)
+  /// Bcrypt digest. Null for accounts created through GitHub OAuth, which have
+  /// no local password to verify.
+  passwordHash String? @db.VarChar(255)
+  role         Role    @default(USER)
+  /// Soft delete. Inactive accounts cannot sign in and are hidden from
+  /// listings, but their username stays reserved and their content stays put.
+  isActive     Boolean @default(true)
+
+  designationId String?
+  designation   Designation? @relation(fields: [designationId], references: [id], onDelete: SetNull)
+
+  /// Denormalised counters, all written inside the same transaction as the row
+  /// they summarise. Admin leaderboards sort on these constantly; recomputing
+  /// them with COUNT(*) per read does not survive the table growing.
+  followerCount      Int @default(0)
+  followingCount     Int @default(0)
+  postCount          Int @default(0)
+  totalLikesReceived Int @default(0)
+
   createdAt DateTime @default(now())
   Post      Post[]
   Reply     Reply[]
   Likes     Like[]
 
+  /// Follow rows where this user is the one doing the following.
+  following Follow[] @relation("UserFollowing")
+  /// Follow rows where this user is the one being followed.
+  followers Follow[] @relation("UserFollowers")
+
   @@index([username])
+  @@index([designationId])
+  @@index([followerCount])
+  @@index([totalLikesReceived])
+  @@index([isActive])
+}
+
+/// A directed edge in the social graph: `follower` follows `following`.
+model Follow {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  followerId String
+  follower   User   @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+
+  followingId String
+  following   User   @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId], name: "unique_follow")
+  @@index([followerId])
+  @@index([followingId])
 }
 
 model Post {
@@ -37,6 +120,7 @@ model Post {
   likes        Like[]
 
   @@index([userId])
+  @@index([likesCount])
 }
 
 model Reply {

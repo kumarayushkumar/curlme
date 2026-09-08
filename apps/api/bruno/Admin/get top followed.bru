@@ -1,0 +1,24 @@
+meta {
+  name: get top followed
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/admin/top-followed?limit=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  limit: 10
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/admin/top-followed` - accounts ranked by follower count.
+}

@@ -1,0 +1,30 @@
+meta {
+  name: follow user
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/follow/:username
+  body: none
+  auth: inherit
+}
+
+params:path {
+  username: {{targetUsername}}
+}
+
+tests {
+  test("follows the target, or reports it is already followed", function() {
+    expect(res.getStatus()).to.be.oneOf([201, 409]);
+  });
+}
+
+docs {
+  `POST /api/follow/:username`
+
+  201 on success. 400 `self_follow`, 404 `not_found`, 409 `already_following`.
+
+  409 is accepted here so a repeat collection run stays green; `unfollow user`
+  runs next and asserts a strict 200 either way.
+}

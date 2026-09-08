@@ -1,0 +1,14 @@
+meta {
+  name: Posts
+  seq: 6
+}
+
+auth {
+  mode: inherit
+}
+
+docs {
+  `create post` writes the new id into the `postId` environment variable, so
+  the rest of this folder and the whole `Replies` folder work without any
+  copy and paste.
+}

@@ -1,0 +1,29 @@
+meta {
+  name: delete post
+  type: http
+  seq: 5
+  tags: [
+    destructive
+  ]
+}
+
+delete {
+  url: {{baseUrl}}/api/delete-post/:postId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  postId: {{postId}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `DELETE /api/delete-post/:postId` - only the author can delete. Someone
+  else's post answers 404 `not_found` rather than 403, so the endpoint does
+  not confirm that the id exists.
+}

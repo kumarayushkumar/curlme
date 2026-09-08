@@ -1,0 +1,20 @@
+meta {
+  name: get overview
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/admin/overview
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/admin/overview` - platform wide counters. Takes no parameters.
+}

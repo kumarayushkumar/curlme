@@ -1,0 +1,25 @@
+meta {
+  name: list my following
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/following?page=1&limit=20
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 20
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/following` - the accounts you follow.
+}

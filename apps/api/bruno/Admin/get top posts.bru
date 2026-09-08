@@ -1,0 +1,24 @@
+meta {
+  name: get top posts
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/api/admin/top-posts?limit=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  limit: 10
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/admin/top-posts` - posts ranked by engagement.
+}

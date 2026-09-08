@@ -1,0 +1,58 @@
+meta {
+  name: register
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{username}}",
+    "password": "{{password}}",
+    "name": "{{name}}",
+    "designation": "{{designation}}",
+    "bio": "{{bio}}"
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("token", res.getBody().data.token);
+  }
+}
+
+tests {
+  test("creates the account, or reports it already exists", function() {
+    expect(res.getStatus()).to.be.oneOf([201, 409]);
+  });
+
+  test("returns a token when the account is new", function() {
+    if (res.getStatus() !== 201) return;
+    expect(res.getBody().data.token).to.be.a("string");
+    expect(res.getBody().data.user.username).to.equal(bru.getEnvVar("username"));
+  });
+}
+
+docs {
+  `POST /api/register`
+
+  | Field | Rule |
+  | --- | --- |
+  | `username` | 3-39 chars, letters, digits and dashes only |
+  | `password` | 8-72 chars, at least one letter and one number |
+  | `name` | 1-200 chars |
+  | `designation` | an existing slug, see `Designations > list designations` |
+  | `bio` | optional, up to 280 chars |
+
+  Accepts 409 `username_taken` as well as 201, so a whole collection run works
+  against a database that already has the account. `signin` runs next and
+  refreshes the token either way.
+
+  400 `unknown_designation` when the slug is not in the catalogue. Rate
+  limited.
+}

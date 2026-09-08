@@ -5,7 +5,9 @@
 import { prisma } from '../../config/database.js'
 
 /**
- * Toggles like/unlike status for a reply
+ * Toggles like/unlike status for a reply. The Like row, the reply's own
+ * `likesCount` and the reply author's `totalLikesReceived` all move together in
+ * one transaction. A user liking their own reply is allowed and still counts.
  *
  * @param {string} replyId - The ID of the reply to like/unlike
  * @param {string} userId - The ID of the user performing the action
@@ -17,7 +19,7 @@ const toggleLikeReplyController = async (
 ): Promise<{ message: string } | null> => {
   const reply = await prisma.reply.findUnique({
     where: { id: replyId },
-    include: { likes: true }
+    select: { userId: true }
   })
 
   if (!reply) return null
@@ -32,38 +34,24 @@ const toggleLikeReplyController = async (
     }
   })
 
-  let action: 'liked' | 'unliked'
+  const delta = existingLike ? -1 : 1
+  const action = existingLike ? 'unliked' : 'liked'
 
-  if (existingLike) {
-    // Unlike: Remove like and decrement count
-    await prisma.$transaction([
-      prisma.like.delete({
-        where: { id: existingLike.id }
-      }),
-      prisma.reply.update({
-        where: { id: replyId },
-        data: { likesCount: { decrement: 1 } }
-      })
-    ])
+  const likeWrite = existingLike
+    ? prisma.like.delete({ where: { id: existingLike.id } })
+    : prisma.like.create({ data: { userId: userId, replyId: replyId } })
 
-    action = 'unliked'
-  } else {
-    // Like: Add like and increment count
-    await prisma.$transaction([
-      prisma.like.create({
-        data: {
-          userId: userId,
-          replyId: replyId
-        }
-      }),
-      prisma.reply.update({
-        where: { id: replyId },
-        data: { likesCount: { increment: 1 } }
-      })
-    ])
-
-    action = 'liked'
-  }
+  await prisma.$transaction([
+    likeWrite,
+    prisma.reply.update({
+      where: { id: replyId },
+      data: { likesCount: { increment: delta } }
+    }),
+    prisma.user.update({
+      where: { id: reply.userId },
+      data: { totalLikesReceived: { increment: delta } }
+    })
+  ])
 
   return {
     message: `Reply ${action} successfully`

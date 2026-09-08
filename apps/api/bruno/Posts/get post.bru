@@ -1,0 +1,31 @@
+meta {
+  name: get post
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/get-post/:postId?page=1&limit=50
+  body: none
+  auth: inherit
+}
+
+params:path {
+  postId: {{postId}}
+}
+
+params:query {
+  page: 1
+  limit: 50
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/get-post/:postId` - one post with a page of its replies.
+  `limit` defaults to 50. 404 `not_found` for an unknown id, 400 when the id
+  is not a UUID.
+}

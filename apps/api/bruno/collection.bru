@@ -1,0 +1,65 @@
+meta {
+  type: collection
+}
+
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+docs {
+  # curlme API
+
+  Every request that needs a session inherits this collection level bearer
+  auth, so signing in once fills `{{token}}` for the whole collection.
+
+  ## Getting started
+
+  1. Pick the `Local` environment (or `Production`).
+  2. Run `Auth > register` once to create the account, or `Auth > signin` if it
+     already exists. Both write `token` into the environment.
+  3. Everything else is now authenticated.
+
+  `Admin` needs an account whose role is ADMIN. Put the username in
+  `ADMIN_USERNAMES` in `apps/api/.env` and run `npm run db:seed`, or have an
+  existing admin promote it through `Admin > set user role`.
+
+  ## Environment variables
+
+  | Variable | Purpose |
+  | --- | --- |
+  | `baseUrl` | API origin |
+  | `username`, `password`, `name`, `designation`, `bio` | registration and sign in payload |
+  | `token` | bearer token, written by register and signin (secret) |
+  | `targetUsername`, `targetPassword` | the second account the follow and admin user routes act on |
+  | `postId`, `replyId` | written by create post and create reply |
+  | `deviceCode` | written by the GitHub device flow start |
+
+  ## Running the whole collection
+
+  Folders are sequenced so a top to bottom run tells a story: register both
+  accounts, sign in, read the catalogue and the profiles, follow and unfollow,
+  post, reply, like, then delete.
+
+      bru run -r --env Local --delay 1500 --exclude-tags destructive,manual
+
+  `--delay` is not optional. Every route sits behind a limiter of 10 requests
+  per 10 seconds per IP, so an undelayed run 429s from about the seventh
+  request onward.
+
+  Two tags exist to keep that run clean:
+
+  - `destructive` marks the requests that would break what follows, notably
+    `Posts > delete post`, which removes the very post the `Replies` folder
+    needs.
+  - `manual` marks the GitHub device flow, which needs a browser step in the
+    middle and so cannot run unattended.
+
+  The run is idempotent. Requests that would collide on a second run
+  (`register`, `register follow target`, `follow user`, `create designation`)
+  accept the conflict status alongside the created one, so nothing has to be
+  reset between runs.
+}

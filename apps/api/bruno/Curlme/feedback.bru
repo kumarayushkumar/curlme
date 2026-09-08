@@ -1,0 +1,20 @@
+meta {
+  name: feedback
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/feedback
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /feedback` - static contact and contribution blurb. No auth.
+}

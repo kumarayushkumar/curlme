@@ -6,7 +6,9 @@ import { prisma } from '../../config/database.js'
 import { updatePostInCache } from '../../utils/redis.js'
 
 /**
- * Toggles like/unlike status for a post
+ * Toggles like/unlike status for a post. The Like row, the post's own
+ * `likesCount` and the post author's `totalLikesReceived` all move together in
+ * one transaction. A user liking their own post is allowed and still counts.
  *
  * @param {string} postId - The ID of the post to like/unlike
  * @param {string} userId - The ID of the user performing the action
@@ -18,7 +20,7 @@ const toggleLikePostController = async (
 ): Promise<{ message: string } | null> => {
   const post = await prisma.post.findUnique({
     where: { id: postId },
-    include: { likes: true }
+    select: { userId: true, likesCount: true }
   })
 
   if (!post) return null
@@ -33,44 +35,27 @@ const toggleLikePostController = async (
     }
   })
 
-  let action: 'liked' | 'unliked'
-  let newLikesCount: number
+  const delta = existingLike ? -1 : 1
+  const action = existingLike ? 'unliked' : 'liked'
 
-  if (existingLike) {
-    // Unlike: Remove like and decrement count
-    await prisma.$transaction([
-      prisma.like.delete({
-        where: { id: existingLike.id }
-      }),
-      prisma.post.update({
-        where: { id: postId },
-        data: { likesCount: { decrement: 1 } }
-      })
-    ])
+  const likeWrite = existingLike
+    ? prisma.like.delete({ where: { id: existingLike.id } })
+    : prisma.like.create({ data: { userId: userId, postId: postId } })
 
-    action = 'unliked'
-    newLikesCount = post.likesCount - 1
-  } else {
-    // Like: Add like and increment count
-    await prisma.$transaction([
-      prisma.like.create({
-        data: {
-          userId: userId,
-          postId: postId
-        }
-      }),
-      prisma.post.update({
-        where: { id: postId },
-        data: { likesCount: { increment: 1 } }
-      })
-    ])
-
-    action = 'liked'
-    newLikesCount = post.likesCount + 1
-  }
+  await prisma.$transaction([
+    likeWrite,
+    prisma.post.update({
+      where: { id: postId },
+      data: { likesCount: { increment: delta } }
+    }),
+    prisma.user.update({
+      where: { id: post.userId },
+      data: { totalLikesReceived: { increment: delta } }
+    })
+  ])
 
   // Update the cache with new likes count
-  await updatePostInCache(postId, { likesCount: newLikesCount })
+  await updatePostInCache(postId, { likesCount: post.likesCount + delta })
 
   return {
     message: `Post ${action} successfully`

@@ -4,45 +4,45 @@
 
 import type { Request, Response } from 'express'
 import getUserController from '../controllers/user/get-user.controller.js'
+import updateProfileController from '../controllers/user/update-profile.controller.js'
 import { HTTP_STATUS_CODE } from '../utils/constants.js'
 import { logger } from '../utils/logger.js'
+import { sendError, sendSuccess } from '../utils/respond.js'
 
 /**
  * Handler for retrieving user profile by userId or username
  */
 export const getUserHandler = async (req: Request, res: Response) => {
   const currentUserId = req.user!.userId
-  const requestedUsername = req.params.username as string
+  const requestedUsername = req.params.username as string | undefined
 
-  let profile
+  const profile = await getUserController(currentUserId, requestedUsername)
 
-  if (requestedUsername) {
-    // Fetching another user's profile by username
-    profile = await getUserController(null, requestedUsername)
-
-    if (!profile) {
-      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-        success: false,
-        error: 'not_found',
-        message: `user '${requestedUsername}' could not be found`
-      })
-    }
-  } else {
-    profile = await getUserController(currentUserId)
-
-    if (!profile) {
+  if (!profile) {
+    if (!requestedUsername) {
       logger.error(`cannot find own profile for userId: ${currentUserId}`)
-      return res.status(HTTP_STATUS_CODE.NOT_FOUND).json({
-        success: false,
-        error: 'not_found',
-        message: 'your profile could not be found'
-      })
     }
+
+    return sendError(res, {
+      status: HTTP_STATUS_CODE.NOT_FOUND,
+      error: 'not_found',
+      message: requestedUsername
+        ? `user '${requestedUsername}' could not be found`
+        : 'your profile could not be found'
+    })
   }
 
-  return res.status(HTTP_STATUS_CODE.OK).json({
-    success: true,
-    data: { profile },
-    message: 'profile fetched successfully'
-  })
+  return sendSuccess(res, { profile }, 'profile fetched successfully')
+}
+
+/**
+ * Handler for editing your own profile
+ */
+export const updateProfileHandler = async (req: Request, res: Response) => {
+  const userId = req.user!.userId
+  const { bio } = req.body as { bio: string }
+
+  const profile = await updateProfileController(userId, bio)
+
+  return sendSuccess(res, { profile }, 'profile updated successfully')
 }

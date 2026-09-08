@@ -42,13 +42,9 @@ export async function handleFeed(): Promise<void> {
     console.log(colorize('Curlme Feed', 'bold'))
     displayAsText(response.data.feed.posts)
 
-    if (response?.data?.pagination) {
-      const {
-        currentPage: apiPage,
-        hasNextPage,
-        totalPostsOnPage,
-        hasPreviousPage
-      } = response.data.pagination
+    if (response?.data?.feed?.pagination) {
+      const { currentPage: apiPage, totalPostsOnPage } =
+        response.data.feed.pagination
       console.log(
         colorize(`Page ${apiPage} | ${totalPostsOnPage} posts`, 'bold')
       )
@@ -145,7 +141,7 @@ export async function handleFeed(): Promise<void> {
         break
 
       case '\u001b[B': // Down arrow
-        const hasNext = feedData?.data?.feed.pagination?.hasNextPage
+        const hasNext = feedData?.data?.feed?.pagination?.hasNextPage
         if (
           hasNext &&
           !isLoading &&
@@ -157,7 +153,7 @@ export async function handleFeed(): Promise<void> {
           displayFeed(currentPage)
         } else if (
           !hasNext &&
-          feedData?.data?.feed.pagination &&
+          feedData?.data?.feed?.pagination &&
           currentStatusMessage !== 'Already on last page'
         ) {
           showStatusMessage('Already on last page', 'grey')

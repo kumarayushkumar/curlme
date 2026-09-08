@@ -45,7 +45,7 @@ export const loginHandler = async (
           expires_in: deviceFlowResponse.data.expires_in,
           interval: deviceFlowResponse.data.interval,
           instructions: `1. Visit ${deviceFlowResponse.data.verification_uri} and enter code: ${deviceFlowResponse.data.user_code}
-2. After authorization, run: curl -X POST http://localhost:8000/login -H "Content-Type: application/json" -d '{"device_code":"${deviceFlowResponse.data.device_code}"}'`
+2. After authorization, run: curl -X POST http://localhost:8000/api/login -H "Content-Type: application/json" -d '{"device_code":"${deviceFlowResponse.data.device_code}"}'`
         }
       })
     }
@@ -100,7 +100,8 @@ export const loginHandler = async (
 
     const jwtToken = generateToken({
       userId: user.id,
-      username: user.username
+      username: user.username,
+      role: user.role
     })
 
     return res.status(HTTP_STATUS_CODE.OK).json({
@@ -111,7 +112,8 @@ export const loginHandler = async (
         user: {
           id: user.id,
           username: user.username,
-          name: user.name
+          name: user.name,
+          role: user.role
         },
         instructions: 'use this token in authorization header: Bearer <token>'
       }

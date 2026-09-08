@@ -1,0 +1,24 @@
+meta {
+  name: get dashboard
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/admin/dashboard?limit=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  limit: 10
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/admin/dashboard` - every table below plus the overview counters in one response, which is what the CLI dashboard renders.
+}

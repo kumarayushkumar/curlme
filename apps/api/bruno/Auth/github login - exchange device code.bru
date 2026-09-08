@@ -1,0 +1,36 @@
+meta {
+  name: github login - exchange device code
+  type: http
+  seq: 5
+  tags: [
+    manual
+  ]
+}
+
+post {
+  url: {{baseUrl}}/api/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "device_code": "{{deviceCode}}"
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setEnvVar("token", res.getBody().data.token);
+  }
+}
+
+docs {
+  `POST /api/login` with the `device_code` from the previous request.
+
+  Creates the account on first sign in and returns a JWT, which is stored as
+  `token`.
+
+  202 `authorization_pending` means the browser step is not finished yet, 429
+  `too_many_requests` means poll more slowly.
+}

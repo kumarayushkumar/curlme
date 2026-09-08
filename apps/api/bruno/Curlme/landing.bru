@@ -1,0 +1,20 @@
+meta {
+  name: landing
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /` - the banner the CLI prints on first contact. No auth.
+}

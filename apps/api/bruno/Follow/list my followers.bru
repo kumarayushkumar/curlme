@@ -1,0 +1,26 @@
+meta {
+  name: list my followers
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/followers?page=1&limit=20
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 20
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/followers` - your own followers. `page` and `limit` are optional,
+  defaulting to page 1 and 20 rows.
+}

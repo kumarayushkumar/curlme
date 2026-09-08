@@ -1,0 +1,25 @@
+meta {
+  name: toggle like post
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/toggle-like-post/:postId
+  body: none
+  auth: inherit
+}
+
+params:path {
+  postId: {{postId}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `POST /api/toggle-like-post/:postId` - likes the post, or removes the like
+  if it is already there. The response `message` says which happened.
+}

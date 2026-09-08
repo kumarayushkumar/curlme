@@ -1,0 +1,21 @@
+meta {
+  name: Admin
+  seq: 8
+}
+
+auth {
+  mode: inherit
+}
+
+docs {
+  Mounted at `/api/admin`, ahead of the general `/api` router so the admin
+  guard is reached first. Every route needs a token whose account currently
+  has the ADMIN role, which is re-read from the database on each request.
+
+  A non admin token gets 403. To get one: add the username to
+  `ADMIN_USERNAMES` in `apps/api/.env` and run `npm run db:seed`, or have an
+  existing admin call `set user role`.
+
+  The ranked tables all take an optional `limit`, defaulting to 10 and
+  clamped to 100.
+}

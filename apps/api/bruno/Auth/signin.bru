@@ -1,0 +1,43 @@
+meta {
+  name: signin
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/signin
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{username}}",
+    "password": "{{password}}"
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setEnvVar("token", res.getBody().data.token);
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+tests {
+  test("returns a token", function() {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().data.token).to.be.a("string");
+  });
+}
+
+docs {
+  `POST /api/signin` - exchanges the username and password for a 30 day JWT
+  and stores it as the `token` environment variable.
+
+  401 `invalid_credentials` when either field is wrong. Rate limited.
+}

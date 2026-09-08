@@ -7,8 +7,33 @@ import type { CachedPost } from '../../types/post.js'
 import { logger } from '../../utils/logger.js'
 import { getPostsFromCache, setPostsInCache } from '../../utils/redis.js'
 
+/** A reply row read purely to work out whose like counters have to move. */
+type ReplyLikeRow = { userId: string; likesCount: number }
+
 /**
- * Deletes a post and all associated data (replies, likes)
+ * Sums the likes of the replies being deleted per reply author. Replies on a
+ * post can belong to anyone, so every distinct author gets exactly one entry.
+ * Authors whose total is zero are dropped, since writing a no-op update for
+ * them is pure cost.
+ *
+ * @param {ReplyLikeRow[]} replies - The replies about to be deleted
+ * @returns {Map<string, number>} - Likes to subtract, keyed by reply author ID
+ */
+const sumLikesByAuthor = (replies: ReplyLikeRow[]): Map<string, number> => {
+  const totals = new Map<string, number>()
+
+  for (const { userId, likesCount } of replies) {
+    totals.set(userId, (totals.get(userId) ?? 0) + likesCount)
+  }
+
+  return new Map([...totals].filter(([, total]) => total !== 0))
+}
+
+/**
+ * Deletes a post and all associated data (replies, likes), keeping the
+ * denormalised user counters exact in the same transaction: the post author
+ * loses one from `postCount` and the post's likes from `totalLikesReceived`,
+ * and every author of a deleted reply loses that reply's likes too.
  *
  * @param {string} postId - The ID of the post to delete
  * @param {string} userId - The ID of the user requesting deletion
@@ -22,9 +47,29 @@ const deletePostController = async (
   if (!post) return null
 
   await prisma.$transaction(async tx => {
+    const replies = await tx.reply.findMany({
+      where: { postId },
+      select: { id: true, userId: true, likesCount: true }
+    })
+
     await tx.reply.deleteMany({ where: { postId } })
     await tx.like.deleteMany({ where: { postId } })
     await tx.post.delete({ where: { id: postId } })
+
+    await tx.user.update({
+      where: { id: post.userId },
+      data: {
+        postCount: { decrement: 1 },
+        totalLikesReceived: { decrement: post.likesCount }
+      }
+    })
+
+    for (const [authorId, likes] of sumLikesByAuthor(replies)) {
+      await tx.user.update({
+        where: { id: authorId },
+        data: { totalLikesReceived: { decrement: likes } }
+      })
+    }
   })
 
   // Invalidate cache after post deletion

@@ -1,0 +1,26 @@
+meta {
+  name: get user profile
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/api/profile/:username
+  body: none
+  auth: inherit
+}
+
+params:path {
+  username: {{targetUsername}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.success: eq true
+}
+
+docs {
+  `GET /api/profile/:username` - someone else's profile.
+
+  404 `not_found` when the username does not exist. Still needs a token.
+}

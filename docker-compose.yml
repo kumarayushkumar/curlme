@@ -19,6 +19,26 @@ services:
     networks:
       - database-network
 
+  # One-shot: applies migrations and seeds the designation pool, then exits.
+  # Built from the `builder` target because the runtime image has no Prisma CLI
+  # or tsx. The api waits for this to complete successfully before starting, so
+  # a fresh environment can never come up against an empty database.
+  migrate:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+      target: builder
+    container_name: curlme-migrate
+    command: sh -c "npx prisma migrate deploy && npx tsx prisma/seed.ts"
+    env_file:
+      - .env
+    restart: "no"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - database-network
+
   api:
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8000/health || exit 1"]
@@ -42,6 +62,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     networks:
       - curlme-network
       - database-network
